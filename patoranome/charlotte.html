@@ -27,6 +27,12 @@
       padding-top:    5px;
       padding-bottom: 5px;
     }
+    #control .label {
+      font-size: 11pt;
+      display: inline-block;
+      width: 5em;
+      text-align: right;
+    }
     footer {
       font-size: 9pt;
       position: absolute;
@@ -45,12 +51,14 @@
 </head>
 <body>
   <div id="control">
+    <span class="label">Tempo：</span>
     <input type="text"  id='tempobox' value='120' readonly>
     <input type="range" id='tempobar' value='120' min='60' max='360' step='1'>
     
     <button id="playButton">開始/停止</button>
     <br>
     
+    <span class="label">Volume：</span>
     <input type="text"  id='volumebox' value='30' readonly>
     <input type="range" id='volumebar' value='30' min='0' max='100' step='1'>
   </div>
