@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:title" content="シャールス信号">
+  <meta property="og:url"   content="https://pecmm.github.io/charlottescode/charlottescode.html" />
+  <meta property="og:image" content="https://pecmm.github.io/charlottescode/thumb/thumb.png?d3fe288a">
+  <title>シャールス信号</title>
+  <style>
+    button {
+      margin-bottom: 1em;
+    }
+    textarea {
+      vertical-align: top;
+      width: 95%;
+      height: 8em;
+    }
+    footer {
+      font-size: 9pt;
+      position: fixed;
+      width: 94%;
+      bottom: 0px;
+      margin: 0px;
+      padding: 0px;
+      border: 0px;
+      z-index: 99;
+      background-color: #CCCCCC;
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>シャールス信号</h1>
+  <div>
+    入力：<br />
+    <textarea id='text-in' >しゃるちゃんはてんし</textarea>
+    <button id="convert">変換</button>
+  </div>
+  <div>
+    出力：<br />
+    <textarea id='text-out' readonly></textarea>
+  </div>
+  <div>
+    <button id="readOutput">読み上げ</button><br/>
+    <img id="osharu" src="dash.jpg" />
+  </div>
+  
+  <hr />
+  <div>
+    <p>
+      参考：<a href="https://ja.wikipedia.org/wiki/モールス符号#和文モールス符号">和文モールス符号</a>
+      <br>
+      ※かな・数字程度しか使用できません
+    </p>
+    <p>
+      <table border="1" cellpadding="2">
+        <thead>
+          <tr> <th>符号</th> <th>モールス信号</th> <th>シャールス信号</th> </tr>
+        </thead>
+        <tbody>
+          <tr> <td>短点</td> <td>・</td> <td id="label-dot"></td> </tr>
+          <tr> <td>長点</td> <td>－</td> <td id="label-dash"></td> </tr>
+          <tr> <td>文字間隔</td> <td>　</td> <td id="label-space"></td> </tr>
+        </tbody>
+      </table>
+    </p>
+    <p>
+      言い訳：BGM無しのう～！が見つかりませんでした。
+      <a href="https://www.youtube.com/watch?v=JbsijNjjs38&t=6510">う～！</a>
+    </p>
+    <p>
+      言い訳2：文字間隔は適当です。語間隔は扱っていません
+    </p>
+  </div>
+  
+  <script>
+var _0x2d7a=['・－－・','－－・－','・－・','・・・','・・－','・－・・－','・・－－','・－・・・','・・・－','・－－','－・・－','－・－－','－－・・','・－・－－','－－・－－','－・－・－','－・・－－','－・・・－','－－・・－','－・・－・','・－－－・','－－－・－','・・－－・','・－－・－','・－・－・－','－・－－・－','・－・・－・','・－－－－','・・－－－','・・・－－','・・・・－','・・・・・','－・・・・','－－・・・','－－－・・','－－－－・','－－－－－','has','split','join','map','querySelector','button#convert','textarea#text-in','textarea#text-out','button#readOutput','img#osharu','src','removeAttribute','disabled','readonly','setAttribute','style','display','none','addEventListener','click','value','converted','エラー\x0d\x0a--------\x0d\x0a','inline','play','pause','textContent','td#label-dash','td#label-space','ＰＯＮ','和文モールス符号に使用できない文字が含まれています','しゃるちゃんはあくま','🐑その文字列は変換できません！','dot.jpg','dash.jpg','space.jpg','dot.mp3','dash.mp3','・－・－','－・・・','－・－・','－・・','・・－・・','・・－・','－－・','－・－－・','・－－－','－・－','－－－','－－－・'];(function(_0x45ddd9,_0x215036){var _0x4c94a=function(_0x42485b){while(--_0x42485b){_0x45ddd9['push'](_0x45ddd9['shift']());}};_0x4c94a(++_0x215036);}(_0x2d7a,0xf0));var _0x9aed=function(_0x4a0770,_0x5f4824){_0x4a0770=_0x4a0770-0x0;var _0x56d69b=_0x2d7a[_0x4a0770];return _0x56d69b;};function sleepInSec(_0x1318c4){return new Promise((_0x3817c7,_0x62389e)=>{setTimeout(()=>_0x3817c7(),_0x1318c4*0x3e8);});}const displayDot=_0x9aed('0x0');const displayDash='う～！';const displaySpace='\u3000';const inputNGErrorMessage=_0x9aed('0x1');const inputNGTextMap=new Map([[_0x9aed('0x2'),_0x9aed('0x3')]]);const soundLengthInSec=0.8;const imageDotURL=_0x9aed('0x4');const imageDashURL=_0x9aed('0x5');const imageSpaceURL=_0x9aed('0x6');const voiceDotURL=_0x9aed('0x7');const voiceDashURL=_0x9aed('0x8');const codeDot='・';const codeDash='－';const codeSpace='\u3000';const morseCodes=new Map([['イ','・－'],['ロ',_0x9aed('0x9')],['ハ',_0x9aed('0xa')],['ニ',_0x9aed('0xb')],['ホ',_0x9aed('0xc')],['ヘ','・'],['ト',_0x9aed('0xd')],['チ',_0x9aed('0xe')],['リ',_0x9aed('0xf')],['ヌ','・・・・'],['ル',_0x9aed('0x10')],['ヲ',_0x9aed('0x11')],['ワ',_0x9aed('0x12')],['カ','・－・・'],['ヨ','－－'],['タ','－・'],['レ',_0x9aed('0x13')],['ソ',_0x9aed('0x14')],['ツ',_0x9aed('0x15')],['ネ',_0x9aed('0x16')],['ナ',_0x9aed('0x17')],['ラ',_0x9aed('0x18')],['ム','－'],['ウ',_0x9aed('0x19')],['ヰ',_0x9aed('0x1a')],['ノ',_0x9aed('0x1b')],['オ',_0x9aed('0x1c')],['ク',_0x9aed('0x1d')],['ヤ',_0x9aed('0x1e')],['マ',_0x9aed('0x1f')],['ケ',_0x9aed('0x20')],['フ',_0x9aed('0x21')],['コ','－－－－'],['エ','－・－－－'],['テ',_0x9aed('0x22')],['ア',_0x9aed('0x23')],['サ',_0x9aed('0x24')],['キ','－・－・・'],['ユ',_0x9aed('0x25')],['メ',_0x9aed('0x26')],['ミ','・・－・－'],['シ','－－・－・'],['ヱ','・－－・・'],['ヒ',_0x9aed('0x27')],['モ',_0x9aed('0x28')],['セ',_0x9aed('0x29')],['ス',_0x9aed('0x2a')],['ン','・－・－・'],['゛','・・'],['゜',_0x9aed('0x2b')],['ー',_0x9aed('0x2c')],['、',_0x9aed('0x2d')],['（',_0x9aed('0x2e')],['）',_0x9aed('0x2f')],['１',_0x9aed('0x30')],['２',_0x9aed('0x31')],['３',_0x9aed('0x32')],['４',_0x9aed('0x33')],['５',_0x9aed('0x34')],['６',_0x9aed('0x35')],['７',_0x9aed('0x36')],['８',_0x9aed('0x37')],['９',_0x9aed('0x38')],['０',_0x9aed('0x39')]]);const preFilter=new Map([['い','イ'],['ろ','ロ'],['は','ハ'],['に','ニ'],['ほ','ホ'],['へ','ヘ'],['と','ト'],['ち','チ'],['り','リ'],['ぬ','ヌ'],['る','ル'],['を','ヲ'],['わ','ワ'],['か','カ'],['よ','ヨ'],['た','タ'],['れ','レ'],['そ','ソ'],['つ','ツ'],['ね','ネ'],['な','ナ'],['ら','ラ'],['む','ム'],['う','ウ'],['ゐ','ヰ'],['の','ノ'],['お','オ'],['く','ク'],['や','ヤ'],['ま','マ'],['け','ケ'],['ふ','フ'],['こ','コ'],['え','エ'],['て','テ'],['あ','ア'],['さ','サ'],['き','キ'],['ゆ','ユ'],['め','メ'],['み','ミ'],['し','シ'],['ゑ','ヱ'],['ひ','ヒ'],['も','モ'],['せ','セ'],['す','ス'],['ん','ン'],['が','カ゛'],['ぎ','キ゛'],['ぐ','ク゛'],['げ','ケ゛'],['ご','コ゛'],['ざ','サ゛'],['じ','シ゛'],['ず','ス゛'],['ぜ','セ゛'],['ぞ','ソ゛'],['だ','タ゛'],['ぢ','チ゛'],['づ','ツ゛'],['で','テ゛'],['ど','ト゛'],['ば','ハ゛'],['び','ヒ゛'],['ぶ','フ゛'],['べ','ヘ゛'],['ぼ','ホ゛'],['ぱ','ハ゜'],['ぴ','ヒ゜'],['ぷ','フ゜'],['ぺ','ヘ゜'],['ぽ','ホ゜'],['ガ','カ゛'],['ギ','キ゛'],['グ','ク゛'],['ゲ','ケ゛'],['ゴ','コ゛'],['ザ','サ゛'],['ジ','シ゛'],['ズ','ス゛'],['ゼ','セ゛'],['ゾ','ソ゛'],['ダ','タ゛'],['ヂ','チ゛'],['ヅ','ツ゛'],['デ','テ゛'],['ド','ト゛'],['バ','ハ゛'],['ビ','ヒ゛'],['ブ','フ゛'],['ベ','ヘ゛'],['ボ','ホ゛'],['パ','ハ゜'],['ピ','ヒ゜'],['プ','フ゜'],['ペ','ヘ゜'],['ポ','ホ゜'],['っ','ツ'],['ゃ','ヤ'],['ゅ','ユ'],['ょ','ヨ'],['ッ','ツ'],['ャ','ヤ'],['ュ','ユ'],['ョ','ヨ'],['ﾞ','゛'],['ﾟ','゜'],['－','ー'],['ｰ','ー'],['-','ー'],[',','、'],['(','（'],[')','）'],['1','１'],['2','２'],['3','３'],['4','４'],['5','５'],['6','６'],['7','７'],['8','８'],['9','９'],['0','０']]);function filterCharacter(_0x296ef0){if(morseCodes['has'](_0x296ef0))return _0x296ef0;if(preFilter[_0x9aed('0x3a')](_0x296ef0))return preFilter['get'](_0x296ef0);throw inputNGErrorMessage;}function toDisplayCharacter(_0x1b90de){if(_0x1b90de===codeDot){return displayDot;}else if(_0x1b90de===codeDash){return displayDash;}else{return displaySpace;}}function convertToMorseCode(_0x59364d){if(inputNGTextMap[_0x9aed('0x3a')](_0x59364d)){throw inputNGTextMap['get'](_0x59364d);}let _0x46f20c=_0x59364d[_0x9aed('0x3b')]('')['map'](_0x289dae=>filterCharacter(_0x289dae))[_0x9aed('0x3c')]('');let _0x2012e1=_0x46f20c[_0x9aed('0x3b')]('')[_0x9aed('0x3d')](_0x336b1f=>morseCodes['get'](_0x336b1f))[_0x9aed('0x3c')](codeSpace);let _0x4d86df=_0x2012e1[_0x9aed('0x3b')]('')[_0x9aed('0x3d')](_0x3acc6f=>toDisplayCharacter(_0x3acc6f))[_0x9aed('0x3c')]('');return{'filtered':_0x46f20c,'converted':_0x2012e1,'display':_0x4d86df};}let convertButton=document[_0x9aed('0x3e')](_0x9aed('0x3f'));let inputTextArea=document[_0x9aed('0x3e')](_0x9aed('0x40'));let outputTextArea=document[_0x9aed('0x3e')](_0x9aed('0x41'));let readOutputButton=document[_0x9aed('0x3e')](_0x9aed('0x42'));let osharuImage=document[_0x9aed('0x3e')](_0x9aed('0x43'));new Image()[_0x9aed('0x44')]=imageDotURL;new Image()['src']=imageDashURL;new Image()[_0x9aed('0x44')]=imageSpaceURL;let soundMap={};soundMap[codeDot]=new Audio(voiceDotURL);soundMap[codeDash]=new Audio(voiceDashURL);soundMap[codeSpace]={'play':function(){},'pause':function(){},'currentTime':0x0};function enableConvert(){convertButton[_0x9aed('0x45')](_0x9aed('0x46'));inputTextArea[_0x9aed('0x45')](_0x9aed('0x47'));}function disableConvert(){convertButton[_0x9aed('0x48')](_0x9aed('0x46'),_0x9aed('0x46'));inputTextArea[_0x9aed('0x48')](_0x9aed('0x47'),_0x9aed('0x47'));}function enableRead(){readOutputButton[_0x9aed('0x45')](_0x9aed('0x46'));}function disableRead(){readOutputButton['setAttribute']('disabled',_0x9aed('0x46'));}enableConvert();disableRead();osharuImage[_0x9aed('0x49')][_0x9aed('0x4a')]=_0x9aed('0x4b');var lastConverted='';convertButton[_0x9aed('0x4c')](_0x9aed('0x4d'),_0x28af13=>{try{let _0x181d94=convertToMorseCode(inputTextArea[_0x9aed('0x4e')]);outputTextArea[_0x9aed('0x4e')]=_0x181d94[_0x9aed('0x4a')];lastConverted=_0x181d94[_0x9aed('0x4f')];if(lastConverted['length']>0x0){enableRead();}}catch(_0x29153f){outputTextArea[_0x9aed('0x4e')]=_0x9aed('0x50')+_0x29153f;lastConverted='';disableRead();}});readOutputButton['addEventListener'](_0x9aed('0x4d'),async function(_0x265442){disableConvert();disableRead();osharuImage[_0x9aed('0x49')][_0x9aed('0x4a')]=_0x9aed('0x51');for(let _0x16fb19 of lastConverted[_0x9aed('0x3b')]('')){if(_0x16fb19===codeDot){soundMap[_0x16fb19][_0x9aed('0x52')]();osharuImage[_0x9aed('0x44')]=imageDotURL;}else if(_0x16fb19===codeDash){soundMap[_0x16fb19][_0x9aed('0x52')]();osharuImage[_0x9aed('0x44')]=imageDashURL;}else{osharuImage[_0x9aed('0x44')]=imageSpaceURL;}await sleepInSec(soundLengthInSec);soundMap[_0x16fb19][_0x9aed('0x53')]();soundMap[_0x16fb19]['currentTime']=0x0;}osharuImage[_0x9aed('0x49')]['display']=_0x9aed('0x4b');enableConvert();enableRead();});document[_0x9aed('0x3e')]('td#label-dot')[_0x9aed('0x54')]=toDisplayCharacter(codeDot);document[_0x9aed('0x3e')](_0x9aed('0x55'))[_0x9aed('0x54')]=toDisplayCharacter(codeDash);document[_0x9aed('0x3e')](_0x9aed('0x56'))[_0x9aed('0x54')]=toDisplayCharacter(codeSpace);
+  </script>
+  
+  <footer>
+    元ネタ：
+    <a href="https://twitter.com/Charlotte_HNST">島村シャルロットちゃん</a>
+    <br>
+    <a href="https://www.youtube.com/watch?v=JbsijNjjs38">【Minecraft】【雑談】シャルクラ　＃140【島村シャルロット / ハニスト】</a>
+  </footer>
+</body>
+</html>
