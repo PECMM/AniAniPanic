@@ -1,0 +1,49 @@
+/*
+ * accordion-box 以下で、checked == accordion-ontime 時に表示
+ */
+.accordion-box * {
+  vertical-align: top;
+}
+.accordion-box label.accordion-ontime,
+.accordion-box label.accordion-offtime {
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+.accordion-box label.accordion-ontime:hover,
+.accordion-box label.accordion-offtime:hover {
+  background-color: #DDDDDD;
+}
+.accordion-box input[type="checkbox"].accordion-check {
+  display: none;
+}
+.accordion-box > input[type="checkbox"] ~ .accordion-ontime {
+  display: none;
+}
+.accordion-box > input[type="checkbox"] ~ .accordion-offtime {
+  display: block;
+}
+.accordion-box > input:checked[type="checkbox"] ~ .accordion-ontime {
+  display: block;
+}
+.accordion-box > input:checked[type="checkbox"] ~ .accordion-offtime {
+  display: none;
+}
+
+
+
+/* accordion-box 以下でわりと汎用的なもの */
+.accordion-box {
+  display: flex;
+}
+.accordion-box > div.accordion-ontime > * {
+  margin-left: 1em;
+}
+.accordion-box > .accordion-ontime > *:not(:first-child) {
+  margin-top: 1em
+}
+.accordion-box > input[type="checkbox"] ~ label.accordion-offtime {
+  height: 2em;
+}
