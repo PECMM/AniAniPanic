@@ -1,0 +1,128 @@
+/**
+ * tooltip for focused-input
+ */
+textarea + .tltp-for-prev-input,
+input + .tltp-for-prev-input {
+  display: none;
+}
+textarea:focus + .tltp-for-prev-input,
+input:focus + .tltp-for-prev-input {
+  display: block;
+  position: absolute;
+  z-index: 101;
+  margin: 5px 0px 0px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: #000000;
+  color: #FFFFFF;
+}
+textarea:focus + .tltp-for-prev-input:before,
+input:focus + .tltp-for-prev-input:before {
+  display: block;
+  position: absolute;
+  z-index: 100;
+  left: auto;
+  height: 5px;
+  margin-top: -10px;
+  border-left  : 5px solid transparent;
+  border-right : 5px solid transparent;
+  border-bottom: 5px solid #000000;
+  box-sizing: border-box;
+  white-space: pre;
+  content: '';
+}
+
+
+/**
+ * tooltip for hover-item
+ */
+.tltp-on-hover {
+  position: relative; /*この指定必須？*/
+}
+.tltp-on-hover::after,
+.tltp-on-hover::before {
+  display: none;
+}
+.tltp-on-hover.tltp-always:hover::after,
+.tltp-on-hover.tltp-always:hover::before,
+.tltp-on-hover.tltp-enabled:hover:enabled::after,
+.tltp-on-hover.tltp-enabled:hover:enabled::before,
+.tltp-on-hover.tltp-disabled:hover:disabled::after,
+.tltp-on-hover.tltp-disabled:hover:disabled::before {
+  display: inline-block;
+}
+
+.tltp-on-hover:hover::after {
+  position: absolute;
+  z-index: 101;
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: #000000;
+  color: #FFFFFF;
+  white-space: pre;
+  content: attr(data-tltp-text);
+}
+.tltp-on-hover:hover::before {
+  position: absolute;
+  z-index: 100;
+  box-sizing: border-box;
+  content: '';
+}
+
+/*デフォルトはbottom*/
+.tltp-on-hover:not(.tltp-top):not(.tltp-right):not(.tltp-left):hover::after,
+.tltp-on-hover.tltp-bottom:hover::after {
+  top : 100%;
+  left: 0px;
+  margin: 6px 0px 0px;
+}
+.tltp-on-hover:not(.tltp-top):not(.tltp-right):not(.tltp-left):hover::before,
+.tltp-on-hover.tltp-bottom:hover::before {
+  left  : 15px;
+  bottom: -6px;
+  height: 5px;
+  margin-left: 15px;
+  margin-left: 0px;
+  border-right : 5px solid transparent;
+  border-left  : 5px solid transparent;
+  border-bottom: 5px solid #000000;
+}
+.tltp-on-hover.tltp-top:hover::after {
+  left: 0;
+  bottom: 100%;
+  margin: 0px 0px 6px;
+}
+.tltp-on-hover.tltp-top:hover::before {
+  top : -6px;
+  left: 15px;
+  height: 5px;
+  border-top  : 5px solid #000000;
+  border-right: 5px solid transparent;
+  border-left : 5px solid transparent;
+}
+.tltp-on-hover.tltp-right:hover::after {
+  left: 100%;
+  margin: -5px 7px;
+}
+.tltp-on-hover.tltp-right:hover::before {
+  top : 50%;
+  left: 100%;
+  height: 5px;
+  margin-top : -5px;
+  margin-left: 2px;
+  border-top   : 5px solid transparent;
+  border-right : 5px solid #000000;
+  border-bottom: 5px solid transparent;
+}
+.tltp-on-hover.tltp-left:hover::after {
+  right: 100%;
+  margin: -5px 7px 0px;
+}
+.tltp-on-hover.tltp-left:hover::before {
+  left: -7px;
+  height: 5px;
+  margin-top: 5px;
+  border-top   : 5px solid transparent;
+  border-left  : 5px solid #000000;
+  border-bottom: 5px solid transparent;
+}
