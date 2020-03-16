@@ -7,7 +7,7 @@
   <meta property="og:url"   content="https://pecmm.github.io/graph774/graph774.html" />
   <meta property="og:image" content="https://pecmm.github.io/graph774/thumb/thumb.png?624f7056">
   <title>774inc グラフ</title>
-  <link rel='stylesheet' href='tooltip.css' />
+  <link rel='stylesheet' href='../assets/tooltip.css' />
   <style>
     #help *,
     #controller * {
@@ -180,7 +180,7 @@
           <li>アイコンをドラッグで移動させた場合、関係する全ての矢印およびテキストの配置が初期化されます。</li>
           <li>テキストをドラッグで移動させた場合、関係する矢印のみ再描画します。</li>
           <li>PCでブラウザのサイズを変更した場合などは、ブラウザ機能のズームではなく再度「グラフ作成」することを推奨します。</li>
-          <li>テキストラベル一覧から zoom でアイコンの倍率を変更できますが、実験中の機能のため表示が崩れやすいです。</li>
+          <li>テキストラベル一覧から zoom でアイコンの倍率を変更できますが、ラベルの位置により表示が崩れることがあります。</li>
         </ul>
       </div>
       <div class='accordion-ontime-item'>
@@ -302,7 +302,7 @@
   <div id='main'>
   </div>
   
-  <script src="pixi-legacy.min.js"></script>
+  <script src="../assets/pixi-legacy.min-v5.1.6.js"></script>
   <script>
     const AppVersion = "1.1.0";
     document.querySelector('#version').textContent = AppVersion;
