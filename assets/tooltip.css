@@ -59,6 +59,7 @@ input:focus + .tltp-for-prev-input:before {
   border-radius: 5px;
   background-color: #000000;
   color: #FFFFFF;
+  text-align: left;
   white-space: pre;
   content: attr(data-tltp-text);
 }
