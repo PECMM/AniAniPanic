@@ -1,0 +1,297 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="ルーレット(スロット)を自由に作成できます。任意のテキスト・twitterのアイコン等を自由に並べることができます。(774inc.メンバーのルーレットは作成しやすくなっています)">
+  <meta name="keywords" content="ルーレット,スロット,作成,アイコン">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:title" content="774inc.メンバー等でルーレット">
+  <meta property="og:url"   content="https://pecmm.github.io/roulette/roulette774.html" />
+  <meta property="og:image" content="https://pecmm.github.io/roulette/thumb/thumb.png?06696049">
+  <title>774inc.メンバー等でルーレット</title>
+  <link rel='stylesheet' href='../assets/tooltip.css' />
+  <style>
+    #settings,
+    #settings button,
+    #settings select,
+    #settings textarea,
+    #settings label,
+    #settings input {
+      font-size: 100%;
+    }
+    #settings input[type='number'] {
+      text-align: right;
+      width: 100px;
+    }
+    #settings #mainFontFamily {
+      width: 25em;
+    }
+    #settings table caption {
+      font-size: 125%;
+      font-weight: bold;
+      text-align: left;
+      margin-left: -3em;
+    }
+    #settings > table {
+      margin-left: 5em;
+      margin-bottom: 2em;
+    }
+    #settings table th {
+      text-align: right;
+    }
+    #settings textarea {
+      width: 40em;
+    }
+    #settings #userIconTextarea {
+      width: 60em;
+    }
+    #settings label.memberCheck {
+      padding-left : 1em;
+      padding-right: 2em;
+      user-select: none;
+    }
+    #settings .hint {
+      font-size: 80%;
+    }
+    #settings #selectMode {
+      margin-bottom: 1em;
+    }
+    #settings .halfRowBox {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+    }
+    #settings .halfRowBox > div.box {
+      box-sizing: border-box;
+      border: solid 1px #cccccc;
+      padding: 10px;
+      margin: 0 0 0 5px;
+    }
+    
+    #controller:not(:first-child) {
+      margin-top: 1.5em;
+    }
+    
+    #main {
+      display: none;
+      padding: 0.5em;
+      font-size: 100%;
+      user-select: none;
+    }
+    
+    #main .show textarea {
+      width: 36em;
+    }
+    
+    #rouletteBox {
+      display: inline-block;
+      border: solid 1px #cccccc;
+      margin-bottom: 0.5em;
+      padding-left: 1em;
+      padding-right: 1em;
+      padding-top: 10px;
+      cursor: pointer;
+    }
+    #rouletteBox:hover {
+      border: solid 1px #999999;
+    }
+    
+    body {
+      padding-bottom: 3em;
+    }
+  </style>
+</head>
+<body>
+  <div id='settings'>
+    <h1>774inc.メンバー等ルーレット</h1>
+    
+    <table border='1' cellpadding='5'>
+      <caption>ルーレット内容の決定</caption>
+      <tbody>
+        <tr> <th>当選結果の重複</th> <td><label><input type='checkbox' id='allowDupResult' />同じ項目が何度も当選することを許可する</label></td> </tr>
+        <tr><th>ルーレット項目の指定</th> <td>
+          <select id='selectMode'></select>
+          <div id='memberTR' class='halfRowBox'>
+            <table id='memberTable' border='1'></table>
+            <div class='box'>
+              <h2>まとめてチェック操作</h2>
+              <button id='checkAll774MemberOn'>すべてon</button>
+              <br /><br />
+              <button id='check774MemberExceptNanashiesOn'>ななし以外on</button>
+              <br /><br />
+              <button id='checkAll774MemberOff'>すべてoff</button>
+            </div>
+          </div>
+          <div id='prefecturesTR' class='halfRowBox'>
+            <table id='prefecturesTable' border='1'></table>
+            <div class='box'>
+              <h2>まとめてチェック操作</h2>
+              <button id='checkAllPrefecturesOn'>すべてon</button>
+              <br /><br />
+              <button id='checkAllPrefecturesOff'>すべてoff</button>
+              
+              <h2>県名テキストでチェック内容を編集</h2>
+              <textarea id='prefecturesTextarea' rows='50' style='width:28em;'></textarea>
+              <br /><br />
+              <button id='copyPrefecturesFromTextToChecks' class='tltp-on-hover tltp-always' data-tltp-text='県名がチェックボックスのテキストと(県や府まで)&#10;一致していないと、反映されません。'>← テキスト内容でチェックを付け直す</button>
+              <br /><br />
+              <button id='copyPrefecturesFromChecksToText'>→ チェック内容をテキストへコピー</button>
+            </div>
+          </div>
+          <div id='userInputTR'>
+            <textarea id='userInputTextarea' rows='20'></textarea><div class='tltp-for-prev-input'>テキストでルーレット内容を指定します。<br />1行ごとに1項目の内容になります。</div>
+          </div>
+          <div id='userIconTextTR'>
+            <textarea id='userIconTextarea' rows='20'></textarea>
+            <div class='tltp-for-prev-input'>テキストでアイコン付きのルーレット内容を指定します。<br />1行ごとに1項目の内容になります。<br /><br />書式(1行)：<strong>【テキスト】,【アイコンのURL】</strong><br /><br /><span class='hint'>URLにカンマ "," が含まれる場合、"%2c" の3文字に置き換えてください。</span><br /><span class='hint'>URLから画像が取得できなかった場合、「開始」ボタンを押してもルーレットが表示できません。</span></div>
+            <br /><label><input id='cutoffCircle' type='checkbox' />アイコンを丸く切り抜く</label>
+          </div>
+        </td> </tr>
+      </tbody>
+    </table>
+    
+    <table border='1' cellpadding='5'>
+      <caption>外観の調整</caption>
+      <tbody>
+        <tr> <th>全体のフォントサイズ</th> <td><label><input id='mainFontSize' type='number' min='1' /><div class='tltp-for-prev-input'>全体的なフォントサイズを指定します。<br />ルーレットの大きさも変わります</div> px</label></td> </tr>
+        <tr> <th>全体のフォント名</th> <td><label><input id='mainFontFamily' type='text' /><div class='tltp-for-prev-input'>テキストのフォントを指定します。<br />お使いの端末にインストールされているフォントの名前で指定してください。<br />空欄ならば、ブラウザ設定デフォルトのフォントが使用されます。</div></label></td> </tr>
+        <tr> <th>操作ボタンの表示位置</th> <td><label class='tltp-on-hover tltp-always' data-tltp-text='ルーレット結果をリセットする等の操作ボタンの表示位置です。&#10;「表示しない」場合は、リセットできない＆設定画面に戻るには画面リロードするしかないです。'><select id='showControlsPosition'></select></label></td> </tr>
+        <tr> <th>操作ボタンのヒント</th> <td><label><input type='checkbox' id='showControlsHint' class='tltp-on-hover tltp-always' data-tltp-text='ルーレット結果をリセットする等の操作ボタンの上に、ツールチップの操作説明を表示します。&#10;※ツールチップ＝今表示されているこの吹き出しのこと'>ツールチップで操作のヒントを表示する</label>
+        </td> </tr>
+      </tbody>
+    </table>
+    
+    <table border='1' cellpadding='5'>
+      <caption>アニメーションの調整</caption>
+      <tbody>
+        <tr> <th>アニメーションの間隔</th> <td><label><input id='animationIntervalMS' type='number' min='1' /><div class='tltp-for-prev-input'>フレームの間隔です。(この数値が 16.7 で約 60FPS)<br />この数値を小さくすると、ルーレットのアニメーションが速くなります。<br />小さくし過ぎても処理性能の限界があり、一定以上速くなりません。</div> ms/フレーム</label> <span class='hint'></span></td> </tr>
+        <tr> <th>1行分のアニメーション</th> <td><label><input id='animationStep' type='number' min='1' /><div class='tltp-for-prev-input'>ルーレットで1項目進むのに何フレーム用いるかの設定です。<br />この数値を大きくするとルーレットが滑らかに動いて見えますが、その分回転は遅くなります。<br />1にすると回転しないルーレットになります。</div> フレーム</label> <span class='hint'></span></td> </tr>
+      </tbody>
+    </table>
+    
+    <button id='start'>ルーレットの開始</button>
+    
+    <hr />
+    <div>ver: <span id="version"></span></div>
+  </div>
+  <div id='main'>
+    <div id='rouletteBox'>&nbsp;</div>
+    <hr />
+    <div class='show'>
+      <textarea id='rest' readonly></textarea>
+      <br />
+      <span>↓</span>
+      <br />
+      <textarea id='emit' readonly></textarea>
+    </div>
+    <div id='controller'>
+      <div id='errorProtectionArea'>
+        <button id='reset' class='tltp-on-hover tltp-always' data-tltp-text-orig='ルーレット開始前の状態に戻します。'>リセット</button>
+        <button id='reload' class='tltp-on-hover tltp-always' data-tltp-text-orig='ルーレット結果を破棄して設定画面に戻ります。'>設定画面に戻る</button>
+        <label><input type='checkbox' id='errorProtection' class='tltp-on-hover tltp-always' data-tltp-text='チェックon時のみ、リセット等の&#10;ルーレット結果を破棄する操作を無効化します。'>誤爆防止</label>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const AppVersion = "1.0.0";
+    
+const _0x3b76=['includes','#userIconTextTR','unexpected\x20\x22showControlsPosition\x22\x20value:\x20','47都道府県','textContent','drawImage','allowDupResult','test','6011VcEWjr','value','useThisMember','measureText','showTop','clearRect','#errorProtectionArea','defaultShowControlsPosition','#checkAllPrefecturesOn','filter','たぬき油性マジック','stopRoulette','click','length','#animationIntervalMS','arc',';\x20height:1.8em;\x20}','#showControlsHint','icontext','774','none','mainFontFamily','checkbox','icon','push','has','表示しない','option','#reload','notShown','257craJPW','autoStart','showControlsPosition','mode','ちゃんこ鍋','preventDefault','createDocumentFragment','trim','(デフォルト値＝','fontSize','scrollTo','1487PCyzMk','#prefecturesTR','origID','find','lastChild','#userInputTR','input','text','memberCheck','forEach','data-tltp-text-orig','startRoulette','#errorProtection','1054369zBfVIR','member774inc','isBlinking','addEventListener','selectMode','illegal\x20argument\x20error.\x20`iconTextList`\x20requires\x20at\x20least\x202\x20elements.','cssRules','168kHRQwX','splice','getContext','removeChild','canvas','#prefecturesTable','inline-block','1dzKyjz','グループごとにon/offの\x0a切り替えができます','しゃぶしゃぶ','#main\x20#controller\x20label\x20\x20{\x20font:\x20','キムチ鍋','#check774MemberExceptNanashiesOn','302506SciMvO','setItem','#controller','save','querySelectorAll','55KjihWR','自由テキスト','onerror','contextmenu','413204UfATBN','data-tltp-text','#checkAll774MemberOff','showControlsHint','prefectures47','createTextNode','true','defaultOn','slice','width','restore','beginPath','parentElement','normal','#selectMode','豆乳鍋','#reset','firstChild','from','赤から鍋','fillText','src','floor','#mainFontFamily','userInputText','group','#prefecturesTextarea','maxTextWidth','#animationStep','map','startBlink','userIconText','allmembers','#checkAll774MemberOn','#memberTable','boxHeight','defaultShowControlsHint','checked','#userIconTextarea','lineHeight','#main\x20.show\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20{\x20font:\x20','defaultMainFontSize','max','isFinite','水炊き','add','body','font','split','#showControlsPosition','setAttribute','#copyPrefecturesFromChecksToText','reload','set','style','abs','margin:\x200.1em\x200\x200.75em;','join','mainFontSize','randomOrder','querySelector','indeterminate','location','defaultAnimationIntervalMS','\x0a誤爆防止中！','#mainFontSize','tltp-on-hover','random','disabled','tltp-always','fontName','insertBefore','774inc.メンバー','insertRule','string','get','reduce','createElement','#main','prefs','members774inc','#rouletteBox','fromCharCode','#cutoffCircle','label','.tltp-on-hover','getOwnPropertyNames','onload','860506wAkDJf','rows','#userInputTextarea','stopBlink','removeAttribute',';\x20}','getAttribute','appendChild','defaultSelectionMode','start','display','randomStart','#emit','indexOf','height','all','userIconTextInput','elem','#settings','animationIntervalMS','ignoreLastInput','getComputedStyle','boxWidth','defaultAnimationStep','globalAlpha','25997yWxICd','usePrefecturesIDs','#version','cutoffCircle','画面上','3hgxEGi','animationStep','styleSheets','localStorage','selectedIndex','searchParams','iconPath'];const _0x52f7=function(_0x15e87e,_0x2e0705){_0x15e87e=_0x15e87e-0x117;let _0x3b7694=_0x3b76[_0x15e87e];return _0x3b7694;};const _0x4945bd=_0x52f7;(function(_0x3d0d23,_0x335814){const _0x5aae1c=_0x52f7;while(!![]){try{const _0x41f12e=-parseInt(_0x5aae1c(0x153))*-parseInt(_0x5aae1c(0x1ee))+parseInt(_0x5aae1c(0x15a))*parseInt(_0x5aae1c(0x14c))+parseInt(_0x5aae1c(0x169))+parseInt(_0x5aae1c(0x134))*-parseInt(_0x5aae1c(0x13f))+-parseInt(_0x5aae1c(0x1c1))+parseInt(_0x5aae1c(0x160))*parseInt(_0x5aae1c(0x1df))+-parseInt(_0x5aae1c(0x165))*parseInt(_0x5aae1c(0x1da));if(_0x41f12e===_0x335814)break;else _0x3d0d23['push'](_0x3d0d23['shift']());}catch(_0xc5299){_0x3d0d23['push'](_0x3d0d23['shift']());}}}(_0x3b76,0xadef7),document[_0x4945bd(0x1a5)](_0x4945bd(0x1dc))[_0x4945bd(0x1ea)]=AppVersion);function randRangedInt(_0x303b05,_0x5f0def){const _0x435263=_0x4945bd;return Math[_0x435263(0x17f)](Math['random']()*_0x5f0def)+_0x303b05;}function newElem(_0x3a6200,_0x4e99ee=[],_0x518d50=[],_0xe17f77={}){const _0x1cb237=_0x4945bd,_0x14fda0=document[_0x1cb237(0x1b6)](_0x3a6200);return _0x518d50[_0x1cb237(0x123)]>0x0&&_0x14fda0['classList'][_0x1cb237(0x196)](..._0x518d50),Object[_0x1cb237(0x1bf)](_0xe17f77)[_0x1cb237(0x148)](_0x50724e=>{const _0x1b3ca6=_0x1cb237;_0x14fda0[_0x1b3ca6(0x19b)](_0x50724e,_0xe17f77[_0x50724e]);}),_0x4e99ee[_0x1cb237(0x148)](_0x201045=>{const _0x45b4fc=_0x1cb237;typeof _0x201045===_0x45b4fc(0x1b3)?_0x14fda0[_0x45b4fc(0x1c8)](document[_0x45b4fc(0x16e)](_0x201045)):_0x14fda0[_0x45b4fc(0x1c8)](_0x201045);}),_0x14fda0;}function loadSyncImage(_0x249539){return new Promise((_0x2278d9,_0x4ebc03)=>{const _0x51858e=_0x52f7,_0x3ff6b1=new Image();_0x3ff6b1[_0x51858e(0x1c0)]=()=>_0x2278d9(_0x3ff6b1),_0x3ff6b1[_0x51858e(0x167)]=_0x2a73de=>_0x4ebc03(_0x2a73de),_0x3ff6b1[_0x51858e(0x17e)]=_0x249539;});}const newRandomArray=_0x7553df=>{const _0x5ecf0d=_0x4945bd,_0x66bd04=Array[_0x5ecf0d(0x17b)](_0x7553df);for(let _0x31e8a2=_0x66bd04[_0x5ecf0d(0x123)]-0x1;_0x31e8a2>=0x0;_0x31e8a2--){const _0x591e0c=Math[_0x5ecf0d(0x17f)](Math[_0x5ecf0d(0x1ac)]()*(_0x31e8a2+0x1));[_0x66bd04[_0x31e8a2],_0x66bd04[_0x591e0c]]=[_0x66bd04[_0x591e0c],_0x66bd04[_0x31e8a2]];}return _0x66bd04;},groupBy=(_0x410c5e,_0x1f1a16)=>{const _0x45f985=_0x4945bd,_0x263070=new Map();return _0x410c5e[_0x45f985(0x148)](_0x11175b=>{const _0xec864f=_0x45f985,_0x2cd635=_0x1f1a16(_0x11175b);if(_0x263070[_0xec864f(0x12f)](_0x2cd635))_0x263070[_0xec864f(0x1b4)](_0x2cd635)[_0xec864f(0x12e)](_0x11175b);else _0x2cd635!=null&&_0x263070[_0xec864f(0x19e)](_0x2cd635,[_0x11175b]);}),_0x263070;};function toFontStyle(_0x53205d,_0x4cbc43,_0x182be5=_0x4945bd(0x176)){return typeof _0x4cbc43==='number'?_0x182be5+'\x20'+_0x4cbc43+'px\x20\x22'+_0x53205d+'\x22':_0x182be5+'\x20'+_0x4cbc43+'\x20\x22'+_0x53205d+'\x22';}const StorageKey='roulette-lastInputValues',selectionModeOptional774incMember=_0x4945bd(0x14d),selectionModeOptional47prefectures=_0x4945bd(0x16d),selectionModeOptionalUserInput='userInput',selectionModeOptionalUserIconTextInput=_0x4945bd(0x1d1),useThisMemberClazz=_0x4945bd(0x118),showControlsPositionOptionalTop=_0x4945bd(0x11a),showControlsPositionOptionalBottom='showBottom',showControlsPositionOptionalNone=_0x4945bd(0x133);function generateIconTextCanvas(_0x194d71,_0x54bf87,_0x5e6d56,_0x4308cd=0x140,_0x2e77ad,_0x24d4a6={}){const _0x2efb3b=_0x4945bd,_0x7969eb=_0x24d4a6[_0x2efb3b(0x190)]||1.2,_0x759e57=document[_0x2efb3b(0x1b6)](_0x2efb3b(0x157));_0x759e57['width']=_0x4308cd,_0x759e57['height']=_0x5e6d56*_0x7969eb*_0x194d71['length'];const _0x5ce4db=_0x759e57[_0x2efb3b(0x155)]('2d');_0x5ce4db['font']=toFontStyle(_0x54bf87,_0x5e6d56);const _0x40813d=0x0,_0x28e32e=_0x5e6d56/0xa,_0x5a875d=0.75;return _0x194d71[_0x2efb3b(0x148)]((_0x34f1c0,_0x13e462)=>{const _0x5231a8=_0x2efb3b;_0x34f1c0[_0x5231a8(0x12d)]?(_0x2e77ad&&(_0x5ce4db[_0x5231a8(0x163)](),_0x5ce4db[_0x5231a8(0x174)](),_0x5ce4db[_0x5231a8(0x125)](_0x40813d+_0x5e6d56/0x2,_0x28e32e+_0x13e462*_0x5e6d56*_0x7969eb+_0x5e6d56/0x2,_0x5e6d56/0x2,0x0,0x2*Math['PI']),_0x5ce4db['clip']()),_0x5ce4db['drawImage'](_0x34f1c0[_0x5231a8(0x12d)],_0x40813d,_0x28e32e+_0x13e462*_0x5e6d56*_0x7969eb,_0x5e6d56,_0x5e6d56),_0x2e77ad&&_0x5ce4db[_0x5231a8(0x173)](),_0x5ce4db[_0x5231a8(0x17d)](_0x34f1c0['text'],_0x40813d+_0x5e6d56*1.25,_0x28e32e+(_0x13e462+_0x5a875d)*_0x5e6d56*_0x7969eb)):_0x5ce4db['fillText'](_0x34f1c0[_0x5231a8(0x146)],_0x40813d,_0x28e32e+(_0x13e462+_0x5a875d)*_0x5e6d56*_0x7969eb);}),_0x759e57;}function generateIconTextRoulette(_0x1d2d79,_0x3c1d7d,_0x354af2,_0x2ce927=0x140,_0x2b9828=![],_0x169c60,_0xb1a255={}){const _0x1e9ce2=_0x4945bd;if(_0x1d2d79[_0x1e9ce2(0x123)]<0x2)throw new(_0x1e9ce2(0x151))();const _0x87c591=_0xb1a255[_0x1e9ce2(0x1a4)]??!![],_0x321e58=_0x87c591?newRandomArray(_0x1d2d79):_0x1d2d79,_0x4d14ff=generateIconTextCanvas(_0x321e58['concat'](_0x321e58[0x0]),_0x3c1d7d,_0x354af2,_0x2ce927,_0x2b9828,_0xb1a255),_0xc5ad7e=_0xb1a255[_0x1e9ce2(0x190)]||1.2,_0x372bbd=_0xb1a255['step']||0x3,_0x2c8c79=_0x1d2d79[_0x1e9ce2(0x123)]*_0x372bbd,_0x17fe2d=_0xb1a255['intervalMS']||0x19,_0x1b7ded=_0x354af2*_0xc5ad7e,_0x4cd6f3=document[_0x1e9ce2(0x1b6)](_0x1e9ce2(0x157));_0x4cd6f3[_0x1e9ce2(0x172)]=_0x2ce927,_0x4cd6f3[_0x1e9ce2(0x1cf)]=_0x1b7ded;const _0x2a87bf=_0x4cd6f3[_0x1e9ce2(0x155)]('2d');let _0x584bc6=![],_0x40290d=!_0xb1a255[_0x1e9ce2(0x1cc)]?0x0:_0x372bbd*randRangedInt(0x0,_0x1d2d79['length']),_0x1b8ccd;_0x2a87bf[_0x1e9ce2(0x11b)](0x0,0x0,_0x2ce927,_0x1b7ded),_0x2a87bf[_0x1e9ce2(0x1eb)](_0x4d14ff,0x0,_0x1b7ded*_0x40290d/_0x372bbd,_0x2ce927,_0x1b7ded,0x0,0x0,_0x2ce927,_0x1b7ded);const _0x408c64=()=>{const _0x236d0e=_0x1e9ce2;_0x40290d+=0x1;if(_0x40290d>=_0x2c8c79)_0x40290d=0x0;_0x584bc6&&(_0x2a87bf['clearRect'](0x0,0x0,_0x2ce927,_0x1b7ded),_0x2a87bf[_0x236d0e(0x1eb)](_0x4d14ff,0x0,_0x1b7ded*_0x40290d/_0x372bbd,_0x2ce927,_0x1b7ded,0x0,0x0,_0x2ce927,_0x1b7ded));};return _0x4cd6f3[_0x1e9ce2(0x14a)]=()=>{_0x584bc6=!![],_0x1b8ccd=setInterval(_0x408c64,_0x17fe2d);},_0x4cd6f3[_0x1e9ce2(0x121)]=()=>{const _0x517bf0=_0x1e9ce2;if(_0x584bc6){_0x584bc6=![];if(_0x1b8ccd)clearInterval(_0x1b8ccd);let _0x52ebff=Math[_0x517bf0(0x1a0)](Math['ceil'](_0x40290d/_0x372bbd));if(_0x52ebff>=_0x1d2d79[_0x517bf0(0x123)])_0x52ebff=0x0;if(_0x169c60){if(_0x87c591){const _0x5459a7=_0x321e58[_0x52ebff];_0x169c60(_0x1d2d79[_0x517bf0(0x1ce)](_0x5459a7),_0x5459a7);}else _0x169c60(_0x52ebff,_0x1d2d79[_0x52ebff]);}}},_0x4cd6f3;}function initialize(_0x116c49){const _0x1651aa=_0x4945bd,_0x25b18f=_0x116c49['iconTextItems'],_0x5e60de={};{_0x5e60de[_0x1651aa(0x13d)]=_0x116c49['mainFontSize'],_0x5e60de[_0x1651aa(0x1af)]=_0x116c49[_0x1651aa(0x12b)]?_0x116c49[_0x1651aa(0x12b)]:window[_0x1651aa(0x1d6)](document[_0x1651aa(0x197)])['fontFamily'];const _0x1578d2=document[_0x1651aa(0x1b6)](_0x1651aa(0x157)),_0x44eee9=_0x1578d2[_0x1651aa(0x155)]('2d');_0x44eee9[_0x1651aa(0x198)]=toFontStyle(_0x5e60de[_0x1651aa(0x1af)],_0x5e60de[_0x1651aa(0x13d)]),_0x5e60de[_0x1651aa(0x184)]=_0x25b18f[_0x1651aa(0x186)](_0x263dbd=>_0x44eee9[_0x1651aa(0x119)](_0x263dbd[_0x1651aa(0x146)])[_0x1651aa(0x172)])[_0x1651aa(0x1b5)]((_0x44ea14,_0x434779)=>_0x44ea14>_0x434779?_0x44ea14:_0x434779),_0x5e60de[_0x1651aa(0x1d7)]=Math[_0x1651aa(0x193)](_0x5e60de[_0x1651aa(0x184)]+_0x5e60de['fontSize']*0x2,0xa*_0x5e60de[_0x1651aa(0x13d)]),_0x5e60de['boxHeight']=1.4*_0x5e60de[_0x1651aa(0x13d)];const _0x5bcb17=document[_0x1651aa(0x1a5)](_0x1651aa(0x1b7));_0x5bcb17['style'][_0x1651aa(0x198)]=toFontStyle(_0x5e60de[_0x1651aa(0x1af)],_0x5e60de['fontSize']);const _0x105200=document['querySelector'](_0x1651aa(0x162)),_0x56ec1f=document['querySelector'](_0x1651aa(0x11c));!_0x116c49[_0x1651aa(0x16c)]&&_0x105200[_0x1651aa(0x164)](_0x1651aa(0x1be))[_0x1651aa(0x148)](_0xf6da29=>{const _0x298fc1=_0x1651aa;_0xf6da29['classList']['remove'](_0x298fc1(0x1ae));});if(_0x116c49[_0x1651aa(0x136)]===showControlsPositionOptionalTop){const _0x2e0a33=_0x105200[_0x1651aa(0x175)];_0x2e0a33['insertBefore'](newElem('hr',[],[],{'style':_0x1651aa(0x1a1)}),_0x2e0a33[_0x1651aa(0x17a)]),_0x2e0a33[_0x1651aa(0x1b0)](_0x105200,_0x2e0a33['firstChild']);}else{if(_0x116c49[_0x1651aa(0x136)]===showControlsPositionOptionalBottom){}else{if(_0x116c49[_0x1651aa(0x136)]===showControlsPositionOptionalNone)_0x105200['style'][_0x1651aa(0x1cb)]=_0x1651aa(0x12a);else throw new((_0x1651aa(0x1e8))+_0x116c49[(_0x1651aa(0x136))])();}}}{const _0x2c4ab1=document[_0x1651aa(0x1a5)](_0x1651aa(0x1ba)),_0x3f7b83=document[_0x1651aa(0x1a5)]('#rest'),_0x22dc3a=document['querySelector'](_0x1651aa(0x1cd)),_0x36fff7=document[_0x1651aa(0x1a5)](_0x1651aa(0x179)),_0x390a6b=document[_0x1651aa(0x1a5)](_0x1651aa(0x132)),_0xae1520=document['querySelector'](_0x1651aa(0x14b));{_0x2c4ab1['style'][_0x1651aa(0x172)]=_0x5e60de['boxWidth']+'px',_0x2c4ab1[_0x1651aa(0x19f)][_0x1651aa(0x1cf)]=_0x5e60de[_0x1651aa(0x18c)]+'px';const _0x580d82=Array[_0x1651aa(0x17b)](document[_0x1651aa(0x1e1)])[_0x1651aa(0x142)](_0x47f5e1=>_0x47f5e1['href']===null);_0x580d82[_0x1651aa(0x1b2)](_0x1651aa(0x191)+toFontStyle(_0x5e60de['fontName'],_0x5e60de['fontSize']*0.36)+_0x1651aa(0x1c6),_0x580d82[_0x1651aa(0x152)][_0x1651aa(0x123)]),_0x580d82['insertRule']('#main\x20.show\x20textarea\x20{\x20font:\x20'+toFontStyle(_0x5e60de[_0x1651aa(0x1af)],_0x5e60de[_0x1651aa(0x13d)]*0.36)+_0x1651aa(0x1c6),_0x580d82[_0x1651aa(0x152)]['length']),_0x580d82['insertRule']('#main\x20#controller\x20\x20\x20\x20\x20\x20\x20\x20{\x20font:\x20'+toFontStyle('',_0x5e60de[_0x1651aa(0x13d)]*0.36)+';\x20}',_0x580d82[_0x1651aa(0x152)][_0x1651aa(0x123)]),_0x580d82[_0x1651aa(0x1b2)](_0x1651aa(0x15d)+toFontStyle('',_0x5e60de[_0x1651aa(0x13d)]*0.36)+_0x1651aa(0x1c6),_0x580d82[_0x1651aa(0x152)][_0x1651aa(0x123)]),_0x580d82['insertRule']('#main\x20#controller\x20input\x20\x20{\x20font:\x20'+toFontStyle('',_0x5e60de[_0x1651aa(0x13d)]*0.3)+_0x1651aa(0x1c6),_0x580d82[_0x1651aa(0x152)][_0x1651aa(0x123)]),_0x580d82[_0x1651aa(0x1b2)]('#main\x20#controller\x20button\x20{\x20font:\x20'+toFontStyle('',_0x5e60de['fontSize']*0.3)+_0x1651aa(0x126),_0x580d82[_0x1651aa(0x152)][_0x1651aa(0x123)]);}const _0x13574b=Array['from'](_0x25b18f),_0x4956a1=[];let _0x36edaf=null,_0x3d8d47=![];const _0x32c42c=()=>{const _0x123926=_0x1651aa;_0x13574b['splice'](0x0,_0x13574b[_0x123926(0x123)],..._0x25b18f),_0x4956a1[_0x123926(0x154)](0x0),_0x1e51c1();},_0x22dd55=_0x3bd41b=>{const _0x31bc83=_0x1651aa;if(_0x116c49[_0x31bc83(0x1ec)]){const _0x14bea0=_0x13574b[_0x3bd41b];return _0x4956a1[_0x31bc83(0x12e)](_0x14bea0),_0x14bea0;}else{const _0x12d391=_0x13574b[_0x31bc83(0x154)](_0x3bd41b,0x1)[0x0];return _0x4956a1[_0x31bc83(0x12e)](_0x12d391),_0x12d391;}},_0x1e51c1=()=>{const _0x4604d8=_0x1651aa;_0x3f7b83['value']=_0x13574b['map'](_0x41a027=>_0x41a027['text'])[_0x4604d8(0x1a2)]('\x0a')['trim'](),_0x22dc3a[_0x4604d8(0x117)]=_0x4956a1[_0x4604d8(0x186)](_0x1099db=>_0x1099db[_0x4604d8(0x146)])[_0x4604d8(0x1a2)]('\x0a')[_0x4604d8(0x13b)](),_0x3f7b83[_0x4604d8(0x19b)](_0x4604d8(0x1c2),_0x13574b[_0x4604d8(0x123)]+0x1),_0x22dc3a[_0x4604d8(0x19b)](_0x4604d8(0x1c2),_0x4956a1[_0x4604d8(0x123)]+0x1);};_0x1e51c1();const _0x1925df=[_0x36fff7,_0x390a6b],_0x21c1f3=()=>{const _0x2b0558=_0x1651aa;_0xae1520['checked']?_0x1925df[_0x2b0558(0x148)](_0x1848f4=>{const _0xd80edc=_0x2b0558;_0x1848f4[_0xd80edc(0x19b)](_0xd80edc(0x1ad),_0xd80edc(0x1ad)),_0x1848f4['setAttribute'](_0xd80edc(0x16a),_0x1848f4[_0xd80edc(0x1c7)]('data-tltp-text-orig')+_0xd80edc(0x1a9));}):_0x1925df[_0x2b0558(0x148)](_0x1896e2=>{const _0x47ac96=_0x2b0558;_0x1896e2['removeAttribute']('disabled'),_0x1896e2[_0x47ac96(0x19b)](_0x47ac96(0x16a),_0x1896e2[_0x47ac96(0x1c7)](_0x47ac96(0x149)));});},_0x7c9c77=()=>{const _0xee6dad=_0x1651aa;_0x3d8d47=!![],_0xae1520[_0xee6dad(0x19b)](_0xee6dad(0x1ad),_0xee6dad(0x1ad)),_0x1925df['forEach'](_0x154718=>_0x154718[_0xee6dad(0x19b)](_0xee6dad(0x1ad),_0xee6dad(0x1ad)));},_0x4906a8=()=>{const _0x1e5ef2=_0x1651aa;_0x3d8d47=![],_0xae1520[_0x1e5ef2(0x1c5)](_0x1e5ef2(0x1ad)),_0x21c1f3();},_0x56c208=(_0x1a9436,_0x52a117)=>{const _0x508d7a=_0x1651aa,_0x2e697b=document[_0x508d7a(0x1b6)]('canvas');_0x2e697b['width']=_0x5e60de[_0x508d7a(0x1d7)],_0x2e697b[_0x508d7a(0x1cf)]=_0x5e60de[_0x508d7a(0x18c)],_0x2e697b[_0x508d7a(0x14f)](_0x508d7a(0x168),_0x5e1630=>_0x5e1630['preventDefault']());const _0x2d6d86=_0x2e697b['getContext']('2d');_0x2d6d86['font']=toFontStyle(_0x5e60de[_0x508d7a(0x1af)],_0x5e60de[_0x508d7a(0x13d)]*0.75);const _0x386a49=(_0x5e60de[_0x508d7a(0x1d7)]-_0x2d6d86[_0x508d7a(0x119)](_0x1a9436)[_0x508d7a(0x172)])/0x2,_0x57cee5=_0x5e60de[_0x508d7a(0x18c)]*0x3/0x4;let _0x30a6a4;const _0x1f259=_0x1fa6af=>{const _0x18e84b=_0x508d7a,_0x24bac2=Math['floor'](_0x1fa6af/_0x52a117),_0x2e464e=(_0x1fa6af-_0x24bac2*_0x52a117)/_0x52a117,_0x2e746f=_0x24bac2%0x2===0x0;_0x2d6d86[_0x18e84b(0x11b)](0x0,0x0,_0x5e60de[_0x18e84b(0x1d7)],_0x5e60de[_0x18e84b(0x18c)]),_0x2d6d86[_0x18e84b(0x1d9)]=_0x2e746f?_0x2e464e:0x1-_0x2e464e,_0x2d6d86[_0x18e84b(0x17d)](_0x1a9436,_0x386a49,_0x57cee5),_0x30a6a4&&requestAnimationFrame(_0x1f259);};return _0x2e697b['isBlinking']=()=>{return _0x30a6a4;},_0x2e697b['startBlink']=()=>{_0x30a6a4=!![],requestAnimationFrame(_0x1f259);},_0x2e697b[_0x508d7a(0x1c4)]=()=>{_0x30a6a4=![];},_0x2e697b;},_0x531638=_0x380160=>{const _0x596a01=_0x1651aa;while(_0x2c4ab1[_0x596a01(0x17a)]){_0x2c4ab1[_0x596a01(0x156)](_0x2c4ab1[_0x596a01(0x17a)]);}_0x380160?_0x2c4ab1[_0x596a01(0x1c8)](_0x380160):_0x2c4ab1['textContent']=String[_0x596a01(0x1bb)](0xa0);},_0x2cba39=()=>{const _0x227a74=_0x1651aa;_0x3ec459[_0x227a74(0x14e)]()&&_0x3ec459[_0x227a74(0x1c4)]();if(!_0x3d8d47){const _0x430b8a=_0x3924f=>{const _0x31794c=_0x227a74,_0x21e3e0=[_0x22dd55(_0x3924f)],_0x3863cb=generateIconTextCanvas(_0x21e3e0,_0x5e60de[_0x31794c(0x1af)],_0x5e60de['fontSize'],_0x5e60de[_0x31794c(0x1d7)],_0x116c49[_0x31794c(0x1dd)]);_0x3863cb[_0x31794c(0x14f)](_0x31794c(0x168),_0x18fa07=>_0x18fa07[_0x31794c(0x139)]()),_0x531638(_0x3863cb),_0x1e51c1();};if(_0x13574b[_0x227a74(0x123)]===0x0)_0x531638();else _0x13574b[_0x227a74(0x123)]===0x1?_0x430b8a(0x0):(_0x36edaf=generateIconTextRoulette(_0x13574b,_0x5e60de[_0x227a74(0x1af)],_0x5e60de['fontSize'],_0x5e60de[_0x227a74(0x1d7)],_0x116c49[_0x227a74(0x1dd)],(_0xadac32,_0x237191)=>{_0x4906a8(),_0x430b8a(_0xadac32);},{'step':_0x116c49[_0x227a74(0x1e0)],'intervalMS':_0x116c49[_0x227a74(0x1d4)],'randomStart':!![]}),_0x36edaf[_0x227a74(0x14f)]('contextmenu',_0x4c0107=>_0x4c0107['preventDefault']()),_0x531638(_0x36edaf),_0x36edaf[_0x227a74(0x14a)](),_0x7c9c77());}else _0x36edaf&&(_0x36edaf[_0x227a74(0x121)](),_0x36edaf=null);};_0x2c4ab1['addEventListener']('click',_0x2cba39),_0xae1520[_0x1651aa(0x14f)](_0x1651aa(0x122),_0x21c1f3),_0x36fff7[_0x1651aa(0x14f)](_0x1651aa(0x122),()=>{const _0x5cff71=_0x1651aa;_0x32c42c(),!_0x3ec459[_0x5cff71(0x14e)]()&&_0x3ec459['startBlink'](),_0x531638(_0x3ec459),_0xae1520[_0x5cff71(0x18e)]=!![],_0x21c1f3();}),_0x390a6b['addEventListener'](_0x1651aa(0x122),()=>{const _0x33bd69=_0x1651aa;location[_0x33bd69(0x19d)]();}),_0xae1520[_0x1651aa(0x18e)]=!![],_0x21c1f3();const _0x3ec459=_0x56c208(_0x1651aa(0x1ca),0x2ee);_0x531638(_0x3ec459),_0x3ec459[_0x1651aa(0x187)]();}document[_0x1651aa(0x1a5)](_0x1651aa(0x1d3))[_0x1651aa(0x19f)][_0x1651aa(0x1cb)]=_0x1651aa(0x12a),document[_0x1651aa(0x1a5)](_0x1651aa(0x1b7))[_0x1651aa(0x19f)][_0x1651aa(0x1cb)]=_0x1651aa(0x159),window[_0x1651aa(0x13e)](0x0,0x0);}(async _0x33d2c1=>{const _0x247319=_0x4945bd,_0x52329b=new URL(window[_0x247319(0x1a7)])[_0x247319(0x1e4)],_0x472361=_0x52329b[_0x247319(0x1b4)](_0x247319(0x189))=='true'?_0x33d2c1[_0x247319(0x1b9)]:_0x33d2c1[_0x247319(0x1b9)][_0x247319(0x11f)](_0x18ffd9=>_0x18ffd9['exists']===0x1),_0x4e8c0d=get47Prefectures(),_0x24773f=_0x33d2c1[_0x247319(0x192)],_0x54ee22=document[_0x247319(0x1a5)](_0x247319(0x1aa)),_0x1d6769=document[_0x247319(0x1a5)](_0x247319(0x180)),_0x6eeffc=document[_0x247319(0x1a5)]('#allowDupResult'),_0x3bff66=document[_0x247319(0x1a5)](_0x247319(0x124)),_0x44272e=document[_0x247319(0x1a5)](_0x247319(0x185)),_0x77cb52=document['querySelector'](_0x247319(0x177)),_0x18f30c=document[_0x247319(0x1a5)]('#memberTR'),_0x5a2212=document['querySelector'](_0x247319(0x140)),_0x1d2e52=document[_0x247319(0x1a5)](_0x247319(0x144)),_0x325d7b=document[_0x247319(0x1a5)](_0x247319(0x1e7)),_0x593a0f=document[_0x247319(0x1a5)](_0x247319(0x18b)),_0x247b83=document[_0x247319(0x1a5)](_0x247319(0x158)),_0x1fde24=document['querySelector'](_0x247319(0x1c3)),_0x7c3ba9=document['querySelector'](_0x247319(0x18f)),_0x586903=document['querySelector'](_0x247319(0x1bc)),_0x46b3c1=document[_0x247319(0x1a5)](_0x247319(0x19a)),_0x14aad4=document[_0x247319(0x1a5)](_0x247319(0x127)),_0xb4a130=document[_0x247319(0x1a5)]('#start'),_0x4bf88b=_0x52329b['get'](_0x247319(0x135))==_0x247319(0x16f),_0x494b54=_0x52329b['get']('ignoreLastInput')=='true'||_0x33d2c1[_0x247319(0x1d5)]===!![];{const _0x18971a=!_0x494b54&&window['localStorage']?JSON['parse'](window['localStorage']['getItem'](StorageKey)):null,_0x4b9470=(_0xc12e76,_0x1370e2)=>_0x18971a?_0x18971a[_0xc12e76]??_0x1370e2:_0x1370e2,_0x417a47=()=>{const _0x133c0b=_0x247319,_0x89c3b3=()=>{const _0x5ded0f=_0x52f7;if(_0x77cb52[_0x5ded0f(0x117)]==selectionModeOptional774incMember)return Array[_0x5ded0f(0x17b)](document['querySelectorAll']('.'+selectionModeOptional774incMember+'.'+useThisMemberClazz))[_0x5ded0f(0x11f)](_0x8c3782=>_0x8c3782[_0x5ded0f(0x18e)])['length']>0x0;else{if(_0x77cb52['value']==selectionModeOptional47prefectures)return Array[_0x5ded0f(0x17b)](document[_0x5ded0f(0x164)]('.'+selectionModeOptional47prefectures+'.'+useThisMemberClazz))[_0x5ded0f(0x11f)](_0x213df=>_0x213df[_0x5ded0f(0x18e)])[_0x5ded0f(0x123)]>0x0;else{if(_0x77cb52['value']==selectionModeOptionalUserInput)return _0x1fde24[_0x5ded0f(0x117)]['length']>0x0;else return _0x77cb52[_0x5ded0f(0x117)]==selectionModeOptionalUserIconTextInput?_0x7c3ba9[_0x5ded0f(0x117)][_0x5ded0f(0x123)]>0x0:null;}}};_0x89c3b3()?_0xb4a130[_0x133c0b(0x1c5)](_0x133c0b(0x1ad)):_0xb4a130[_0x133c0b(0x19b)]('disabled','disabled');};_0x54ee22[_0x247319(0x117)]=_0x4b9470(_0x247319(0x1a3),_0x24773f),_0x1d6769[_0x247319(0x117)]=_0x4b9470(_0x247319(0x12b),_0x33d2c1['defaultMainFontName']),_0x6eeffc[_0x247319(0x18e)]=_0x4b9470(_0x247319(0x1ec),_0x33d2c1[_0x247319(0x1ec)]),_0x3bff66['value']=_0x4b9470(_0x247319(0x1d4),_0x33d2c1[_0x247319(0x1a8)]),_0x44272e[_0x247319(0x117)]=_0x4b9470(_0x247319(0x1e0),_0x33d2c1[_0x247319(0x1d8)]),_0x3bff66[_0x247319(0x175)][_0x247319(0x175)]['lastChild'][_0x247319(0x1ea)]=_0x247319(0x13c)+_0x33d2c1[_0x247319(0x1a8)]+')',_0x44272e['parentElement'][_0x247319(0x175)][_0x247319(0x143)][_0x247319(0x1ea)]=_0x247319(0x13c)+_0x33d2c1['defaultAnimationStep']+')',_0x77cb52[_0x247319(0x1c8)](newElem(_0x247319(0x131),[_0x247319(0x1b1)],[],{'value':selectionModeOptional774incMember})),_0x77cb52[_0x247319(0x1c8)](newElem(_0x247319(0x131),[_0x247319(0x1e9)],[],{'value':selectionModeOptional47prefectures})),_0x77cb52['appendChild'](newElem('option',[_0x247319(0x166)],[],{'value':selectionModeOptionalUserInput})),_0x77cb52[_0x247319(0x1c8)](newElem(_0x247319(0x131),['アイコンURL付きテキスト'],[],{'value':selectionModeOptionalUserIconTextInput})),_0x77cb52[_0x247319(0x117)]=_0x52329b[_0x247319(0x1b4)](_0x247319(0x137))===_0x247319(0x129)?selectionModeOptional774incMember:_0x52329b['get']('mode')===_0x247319(0x1b8)?selectionModeOptional47prefectures:_0x52329b['get'](_0x247319(0x137))===_0x247319(0x146)?selectionModeOptionalUserInput:_0x52329b[_0x247319(0x1b4)]('mode')===_0x247319(0x128)?selectionModeOptionalUserIconTextInput:_0x4b9470(_0x247319(0x150),_0x33d2c1[_0x247319(0x1c9)]);_0x77cb52[_0x247319(0x1e3)]===-0x1&&(_0x77cb52[_0x247319(0x1e3)]=0x0);const _0x409432=(_0x4d9333,_0x47e9d1,_0x2af06f,_0x1f7243)=>{const _0x2b61c3=_0x247319,_0x55a7ca=_0x4b9470(_0x2af06f,null),_0x39e002=_0x2b74b3=>newElem('label',[newElem(_0x2b61c3(0x145),[],[_0x2b61c3(0x1ab),'tltp-always'],{'type':'checkbox','checked':'checked','data-tltp-text':_0x2b61c3(0x15b)}),_0x2b74b3],[_0x2b61c3(0x147)]),_0x46d5ab=_0x1cff91=>{const _0x338e26=_0x2b61c3,_0x16db0e=newElem(_0x338e26(0x145),[],[_0x47e9d1,useThisMemberClazz],{'type':_0x338e26(0x12c),'value':_0x1cff91[_0x338e26(0x141)]});return _0x16db0e[_0x338e26(0x18e)]=_0x55a7ca?_0x55a7ca[_0x338e26(0x1e6)](_0x1cff91[_0x338e26(0x141)]):_0x1cff91[_0x338e26(0x170)]?!![]:![],newElem(_0x338e26(0x1bd),[_0x16db0e,_0x1cff91[_0x338e26(0x146)]],[_0x338e26(0x147)]);},_0x4ca0cb=[],_0x2fd68e=document[_0x2b61c3(0x13a)]();groupBy(_0x4d9333,_0x2c501d=>_0x2c501d[_0x2b61c3(0x182)])['forEach']((_0x339410,_0x144452)=>{const _0x4aa3ad=_0x2b61c3,_0x50e957=_0x39e002(_0x144452),_0x281999=_0x50e957[_0x4aa3ad(0x17a)],_0x1f9da1=_0x339410[_0x4aa3ad(0x186)](_0x46d5ab),_0x2e4b30=_0x1f9da1['map'](_0x5d7749=>_0x5d7749[_0x4aa3ad(0x17a)]);_0x281999['addEventListener'](_0x4aa3ad(0x145),_0xbac428=>{const _0xe160cc=_0x4aa3ad;_0x2e4b30[_0xe160cc(0x148)](_0x2db7c1=>{const _0x5ce092=_0xe160cc;_0x2db7c1['checked']=_0x281999[_0x5ce092(0x18e)];}),_0x417a47();});const _0x1f367f=()=>{const _0x2f960e=_0x4aa3ad,_0x232dae=_0x2e4b30[_0x2f960e(0x11f)](_0x3bb0e9=>_0x3bb0e9[_0x2f960e(0x18e)])[_0x2f960e(0x123)];if(_0x232dae==0x0)_0x281999[_0x2f960e(0x18e)]=![],_0x281999['indeterminate']=![];else _0x232dae==_0x2e4b30['length']?(_0x281999[_0x2f960e(0x18e)]=!![],_0x281999['indeterminate']=![]):(_0x281999['checked']=![],_0x281999[_0x2f960e(0x1a6)]=!![]);};_0x2e4b30[_0x4aa3ad(0x148)](_0x41150b=>{const _0xe3e3eb=_0x4aa3ad;_0x41150b[_0xe3e3eb(0x14f)](_0xe3e3eb(0x145),_0x483124=>{_0x1f367f(),_0x417a47();});}),_0x4ca0cb[_0x4aa3ad(0x12e)](_0x1f367f),_0x2fd68e['appendChild'](newElem('tr',[newElem('td',[_0x50e957],[],{'rowspan':_0x339410['length']}),newElem('td',[_0x1f9da1[0x0]])])),_0x1f9da1[_0x4aa3ad(0x171)](0x1)[_0x4aa3ad(0x148)](_0x7eaca7=>{const _0x37429e=_0x4aa3ad;_0x2fd68e[_0x37429e(0x1c8)](newElem('tr',[newElem('td',[_0x7eaca7])]));}),_0x1f367f();}),_0x1f7243[_0x2b61c3(0x1c8)](_0x2fd68e);const _0x47c4ec=()=>{const _0x34d04a=_0x2b61c3;_0x4ca0cb[_0x34d04a(0x148)](_0xf8a64c=>_0xf8a64c()),_0x417a47();};return _0x47c4ec;};{const _0x51d377=_0x409432(_0x472361,selectionModeOptional774incMember,'useMemberIDs',_0x593a0f),_0x39bb8=_0x53fc04=>_0x3ae5e1=>{const _0x48940a=_0x247319;Array['from'](document[_0x48940a(0x164)]('.'+selectionModeOptional774incMember+'.'+useThisMemberClazz))[_0x48940a(0x148)](_0x53fc04),_0x51d377();};document[_0x247319(0x1a5)](_0x247319(0x18a))[_0x247319(0x14f)](_0x247319(0x122),_0x39bb8(_0x2ba832=>_0x2ba832[_0x247319(0x18e)]=!![])),document['querySelector'](_0x247319(0x15f))['addEventListener'](_0x247319(0x122),_0x39bb8(_0x493118=>_0x493118[_0x247319(0x18e)]=!/猫ななし$/[_0x247319(0x1ed)](_0x493118[_0x247319(0x175)][_0x247319(0x1ea)]))),document[_0x247319(0x1a5)](_0x247319(0x16b))[_0x247319(0x14f)](_0x247319(0x122),_0x39bb8(_0xaac568=>_0xaac568[_0x247319(0x18e)]=![]));}{selectionModeOptional47prefectures;const _0x1d7091=_0x409432(_0x4e8c0d,selectionModeOptional47prefectures,_0x247319(0x1db),_0x247b83),_0x91311a=_0x4fb13d=>_0x320b53=>{const _0x348b00=_0x247319;Array['from'](document[_0x348b00(0x164)]('.'+selectionModeOptional47prefectures+'.'+useThisMemberClazz))['forEach'](_0x4fb13d),_0x1d7091();};document['querySelector'](_0x247319(0x11e))[_0x247319(0x14f)](_0x247319(0x122),_0x91311a(_0x3299b7=>_0x3299b7[_0x247319(0x18e)]=!![])),document[_0x247319(0x1a5)]('#checkAllPrefecturesOff')['addEventListener'](_0x247319(0x122),_0x91311a(_0x47c7f9=>_0x47c7f9[_0x247319(0x18e)]=![]));const _0x57db81=document[_0x247319(0x1a5)](_0x247319(0x183));document['querySelector']('#copyPrefecturesFromTextToChecks')[_0x247319(0x14f)](_0x247319(0x122),()=>{const _0x37046a=_0x247319,_0x4e0ed9=_0x57db81[_0x37046a(0x117)]['trim']()[_0x37046a(0x199)]('\x0a')[_0x37046a(0x186)](_0x5d9753=>_0x5d9753[_0x37046a(0x13b)]());Array[_0x37046a(0x17b)](document[_0x37046a(0x164)]('.'+selectionModeOptional47prefectures+'.'+useThisMemberClazz))[_0x37046a(0x148)](_0x2b5c54=>{const _0xa4c469=_0x37046a;_0x2b5c54['checked']=_0x4e0ed9[_0xa4c469(0x1e6)](_0x2b5c54[_0xa4c469(0x175)][_0xa4c469(0x1ea)]);}),_0x1d7091();});const _0x3f048f=()=>{const _0x28e60b=_0x247319;_0x57db81[_0x28e60b(0x117)]=Array[_0x28e60b(0x17b)](document['querySelectorAll']('.'+selectionModeOptional47prefectures+'.'+useThisMemberClazz))['filter'](_0x1e5953=>_0x1e5953['checked'])[_0x28e60b(0x186)](_0x248c81=>_0x248c81[_0x28e60b(0x175)][_0x28e60b(0x1ea)])[_0x28e60b(0x1a2)]('\x0a')[_0x28e60b(0x13b)]();};document[_0x247319(0x1a5)](_0x247319(0x19c))[_0x247319(0x14f)](_0x247319(0x122),_0x3f048f),_0x3f048f();}_0x1fde24['value']='',_0x1fde24['addEventListener'](_0x247319(0x145),_0x417a47),_0x1fde24['value']=_0x4b9470(_0x247319(0x181),[_0x247319(0x15c),'すき焼き',_0x247319(0x195),'味噌鍋',_0x247319(0x178),_0x247319(0x15e),_0x247319(0x138),'モツ鍋',_0x247319(0x17c)][_0x247319(0x1a2)]('\x0a')['trim']()),_0x7c3ba9[_0x247319(0x117)]='',_0x7c3ba9['addEventListener']('input',_0x417a47),_0x586903[_0x247319(0x18e)]=_0x4b9470(_0x247319(0x1dd),!![]),_0x7c3ba9[_0x247319(0x117)]=_0x4b9470(_0x247319(0x188),getDefaultUserIconText());{const _0x4ebb39=[{'mode':selectionModeOptional774incMember,'elem':_0x18f30c},{'mode':selectionModeOptional47prefectures,'elem':_0x5a2212},{'mode':selectionModeOptionalUserInput,'elem':_0x1d2e52},{'mode':selectionModeOptionalUserIconTextInput,'elem':_0x325d7b}],_0x1daeb6=new Map(_0x4ebb39[_0x247319(0x186)](_0x137f8f=>[_0x137f8f[_0x247319(0x137)],_0x137f8f[_0x247319(0x1d2)][_0x247319(0x19f)][_0x247319(0x1cb)]])),_0x2f68e0=_0x3b597c=>{const _0x1fc317=_0x247319;_0x4ebb39[_0x1fc317(0x148)](_0x1634af=>{const _0x37d7d3=_0x1fc317;_0x1634af[_0x37d7d3(0x1d2)][_0x37d7d3(0x19f)][_0x37d7d3(0x1cb)]=_0x1634af[_0x37d7d3(0x137)]===_0x77cb52[_0x37d7d3(0x117)]?_0x1daeb6[_0x37d7d3(0x1b4)](_0x77cb52[_0x37d7d3(0x117)]):'none';}),_0x417a47();};_0x77cb52[_0x247319(0x14f)]('change',_0x2f68e0),_0x2f68e0();}_0x46b3c1[_0x247319(0x1c8)](newElem(_0x247319(0x131),[_0x247319(0x1de)],[],{'value':showControlsPositionOptionalTop})),_0x46b3c1[_0x247319(0x1c8)](newElem(_0x247319(0x131),['画面下'],[],{'value':showControlsPositionOptionalBottom})),_0x46b3c1[_0x247319(0x1c8)](newElem(_0x247319(0x131),[_0x247319(0x130)],[],{'value':showControlsPositionOptionalNone})),_0x46b3c1[_0x247319(0x117)]=_0x4b9470(_0x247319(0x136),_0x33d2c1[_0x247319(0x11d)]),_0x14aad4['checked']=_0x4b9470(_0x247319(0x16c),_0x33d2c1[_0x247319(0x18d)]);}const _0x52b928=async()=>{const _0x1eeb2e=_0x247319,_0x830c05=(_0x260411,_0x3a1c39)=>{const _0x438727=_0x52f7,_0x12ac58=Number(_0x260411);return Number[_0x438727(0x194)](_0x12ac58)&&_0x12ac58>0x0?_0x12ac58:_0x3a1c39;},_0x11d258=_0x830c05(_0x54ee22[_0x1eeb2e(0x117)],_0x24773f),_0x221e12=_0x830c05(_0x3bff66[_0x1eeb2e(0x117)],_0x33d2c1[_0x1eeb2e(0x1a8)]),_0x33a931=_0x830c05(_0x44272e[_0x1eeb2e(0x117)],_0x33d2c1[_0x1eeb2e(0x1d8)]),_0x1e0e60=Array[_0x1eeb2e(0x17b)](document['querySelectorAll']('.'+selectionModeOptional774incMember+'.'+useThisMemberClazz))[_0x1eeb2e(0x11f)](_0x27104f=>_0x27104f[_0x1eeb2e(0x18e)])['map'](_0x4a7763=>_0x4a7763['value']),_0xa4a08a=Array['from'](document[_0x1eeb2e(0x164)]('.'+selectionModeOptional47prefectures+'.'+useThisMemberClazz))[_0x1eeb2e(0x11f)](_0x52172b=>_0x52172b[_0x1eeb2e(0x18e)])[_0x1eeb2e(0x186)](_0x25859c=>_0x25859c['value']);if(!_0x494b54&&window['localStorage']){const _0x46b2a8={'selectMode':_0x77cb52[_0x1eeb2e(0x117)],'mainFontSize':_0x54ee22[_0x1eeb2e(0x117)],'mainFontFamily':_0x1d6769[_0x1eeb2e(0x117)],'animationIntervalMS':_0x3bff66[_0x1eeb2e(0x117)],'animationStep':_0x44272e[_0x1eeb2e(0x117)],'allowDupResult':_0x6eeffc[_0x1eeb2e(0x18e)],'useMemberIDs':_0x1e0e60,'usePrefecturesIDs':_0xa4a08a,'userInputText':_0x1fde24[_0x1eeb2e(0x117)],'userIconText':_0x7c3ba9[_0x1eeb2e(0x117)],'cutoffCircle':_0x586903[_0x1eeb2e(0x18e)],'showControlsPosition':_0x46b3c1[_0x1eeb2e(0x117)],'showControlsHint':showControlsHint[_0x1eeb2e(0x18e)]};window[_0x1eeb2e(0x1e2)][_0x1eeb2e(0x161)](StorageKey,JSON['stringify'](_0x46b2a8));}const _0x2e668b=(()=>{const _0xae8e05=_0x1eeb2e;if(_0x77cb52[_0xae8e05(0x117)]==selectionModeOptional774incMember)return _0x472361[_0xae8e05(0x11f)](_0x288039=>_0x1e0e60[_0xae8e05(0x1e6)](_0x288039[_0xae8e05(0x141)]));else{if(_0x77cb52[_0xae8e05(0x117)]==selectionModeOptional47prefectures)return _0x4e8c0d[_0xae8e05(0x11f)](_0x82fe67=>_0xa4a08a[_0xae8e05(0x1e6)](_0x82fe67[_0xae8e05(0x141)]));else{if(_0x77cb52[_0xae8e05(0x117)]==selectionModeOptionalUserInput)return _0x1fde24[_0xae8e05(0x117)][_0xae8e05(0x199)]('\x0a')['filter'](_0x307d82=>_0x307d82)['map']((_0x50f489,_0x3d43b4)=>({'origID':_0x3d43b4,'text':_0x50f489}));else{if(_0x77cb52['value']==selectionModeOptionalUserIconTextInput)return _0x7c3ba9[_0xae8e05(0x117)][_0xae8e05(0x199)]('\x0a')[_0xae8e05(0x11f)](_0x5dd480=>_0x5dd480)[_0xae8e05(0x186)]((_0x1b235e,_0x543151)=>{const _0x451ee0=_0xae8e05,_0x3539d2=_0x1b235e[_0x451ee0(0x199)](','),_0x1c8703=_0x3539d2[0x0][_0x451ee0(0x13b)](),_0x3d1429=_0x3539d2['length']<0x2?null:_0x3539d2[0x1][_0x451ee0(0x13b)]();return{'origID':_0x543151,'text':_0x1c8703,'iconPath':_0x3d1429,'crossOrigin':!![]};});else throw new('unexpected\x20\x22selectModeInput\x22\x20value:\x20'+_0x77cb52['value'])();}}}})();(await Promise[_0x1eeb2e(0x1d0)](_0x2e668b['map'](_0xd037a8=>_0xd037a8[_0x1eeb2e(0x1e5)]?loadSyncImage(_0xd037a8['iconPath']):null)))[_0x1eeb2e(0x148)]((_0x13c5e4,_0x2beba3)=>{const _0x48064b=_0x1eeb2e;_0x2e668b[_0x2beba3][_0x48064b(0x12d)]=_0x13c5e4;});const _0x184374=_0x77cb52['value']==selectionModeOptionalUserIconTextInput?_0x586903[_0x1eeb2e(0x18e)]:!![];initialize({'mode':_0x77cb52[_0x1eeb2e(0x117)],'allowDupResult':allowDupResult[_0x1eeb2e(0x18e)],'iconTextItems':_0x2e668b,'cutoffCircle':_0x184374,'mainFontSize':_0x11d258,'mainFontFamily':_0x1d6769[_0x1eeb2e(0x117)],'animationIntervalMS':_0x221e12,'animationStep':_0x33a931,'showControlsPosition':_0x46b3c1['value'],'showControlsHint':_0x14aad4[_0x1eeb2e(0x18e)]});};_0xb4a130[_0x247319(0x14f)](_0x247319(0x122),_0x52b928),_0x4bf88b&&_0x52b928();})({'allowDupResult':!![],'defaultSelectionMode':selectionModeOptional774incMember,'members774inc':getMembers774inc(),'defaultMainFontSize':0x30,'defaultMainFontName':_0x4945bd(0x120),'defaultShowControlsPosition':showControlsPositionOptionalTop,'defaultShowControlsHint':![],'defaultAnimationIntervalMS':0x19,'defaultAnimationStep':0x3,'ignoreLastInput':![]});
+    
+    // 隠しパラメータ： allmembers=true      をクエリパラメータに入れると、exists=0 でも表示される
+    // 隠しパラメータ： ignoreLastInput=true をクエリパラメータに入れると、前回の入力を無視する
+    // 隠しパラメータ： mode=774             をクエリパラメータに入れると、ルーレット項目の指定が「774inc.メンバー」で開始される
+    // 隠しパラメータ： mode=pref            上と同様
+    // 隠しパラメータ： mode=text            上と同様
+    // 隠しパラメータ： mode=icontext        上と同様
+    
+    function get47Prefectures() { return [ // 素材お借りしてます https://japan-map.com/
+      { origID: '01', group:'北海道地方'    , text:'北海道'  , iconPath:'imgs/pref/01_hokkaido.png' , defaultOn: 1, },
+      { origID: '02', group:'東北地方'      , text:'青森県'  , iconPath:'imgs/pref/02_aomori.png'   , defaultOn: 1, },
+      { origID: '03', group:'東北地方'      , text:'岩手県'  , iconPath:'imgs/pref/03_iwate.png'    , defaultOn: 1, },
+      { origID: '04', group:'東北地方'      , text:'宮城県'  , iconPath:'imgs/pref/04_miyagi.png'   , defaultOn: 1, },
+      { origID: '05', group:'東北地方'      , text:'秋田県'  , iconPath:'imgs/pref/05_akita.png'    , defaultOn: 1, },
+      { origID: '06', group:'東北地方'      , text:'山形県'  , iconPath:'imgs/pref/06_yamagata.png' , defaultOn: 1, },
+      { origID: '07', group:'東北地方'      , text:'福島県'  , iconPath:'imgs/pref/07_fukushima.png', defaultOn: 1, },
+      { origID: '08', group:'関東地方'      , text:'茨城県'  , iconPath:'imgs/pref/08_ibaraki.png'  , defaultOn: 1, },
+      { origID: '09', group:'関東地方'      , text:'栃木県'  , iconPath:'imgs/pref/09_tochigi.png'  , defaultOn: 1, },
+      { origID: '10', group:'関東地方'      , text:'群馬県'  , iconPath:'imgs/pref/10_gunma.png'    , defaultOn: 1, },
+      { origID: '11', group:'関東地方'      , text:'埼玉県'  , iconPath:'imgs/pref/11_saitama.png'  , defaultOn: 1, },
+      { origID: '12', group:'関東地方'      , text:'千葉県'  , iconPath:'imgs/pref/12_chiba.png'    , defaultOn: 1, },
+      { origID: '13', group:'関東地方'      , text:'東京都'  , iconPath:'imgs/pref/13_tokyo.png'    , defaultOn: 1, },
+      { origID: '14', group:'関東地方'      , text:'神奈川県', iconPath:'imgs/pref/14_kanagawa.png' , defaultOn: 1, },
+      { origID: '15', group:'中部地方'      , text:'新潟県'  , iconPath:'imgs/pref/15_niigata.png'  , defaultOn: 1, },
+      { origID: '16', group:'中部地方'      , text:'富山県'  , iconPath:'imgs/pref/16_toyama.png'   , defaultOn: 1, },
+      { origID: '17', group:'中部地方'      , text:'石川県'  , iconPath:'imgs/pref/17_ishikawa.png' , defaultOn: 1, },
+      { origID: '18', group:'中部地方'      , text:'福井県'  , iconPath:'imgs/pref/18_fukui.png'    , defaultOn: 1, },
+      { origID: '19', group:'中部地方'      , text:'山梨県'  , iconPath:'imgs/pref/19_yamanashi.png', defaultOn: 1, },
+      { origID: '20', group:'中部地方'      , text:'長野県'  , iconPath:'imgs/pref/20_nagano.png'   , defaultOn: 1, },
+      { origID: '21', group:'中部地方'      , text:'岐阜県'  , iconPath:'imgs/pref/21_gifu.png'     , defaultOn: 1, },
+      { origID: '22', group:'中部地方'      , text:'静岡県'  , iconPath:'imgs/pref/22_shizuoka.png' , defaultOn: 1, },
+      { origID: '23', group:'中部地方'      , text:'愛知県'  , iconPath:'imgs/pref/23_aichi.png'    , defaultOn: 1, },
+      { origID: '24', group:'近畿地方'      , text:'三重県'  , iconPath:'imgs/pref/24_mie.png'      , defaultOn: 1, },
+      { origID: '25', group:'近畿地方'      , text:'滋賀県'  , iconPath:'imgs/pref/25_shiga.png'    , defaultOn: 1, },
+      { origID: '26', group:'近畿地方'      , text:'京都府'  , iconPath:'imgs/pref/26_kyoto.png'    , defaultOn: 1, },
+      { origID: '27', group:'近畿地方'      , text:'大阪府'  , iconPath:'imgs/pref/27_osaka.png'    , defaultOn: 1, },
+      { origID: '28', group:'近畿地方'      , text:'兵庫県'  , iconPath:'imgs/pref/28_hyogo.png'    , defaultOn: 1, },
+      { origID: '29', group:'近畿地方'      , text:'奈良県'  , iconPath:'imgs/pref/29_nara.png'     , defaultOn: 1, },
+      { origID: '30', group:'近畿地方'      , text:'和歌山県', iconPath:'imgs/pref/30_wakayama.png' , defaultOn: 1, },
+      { origID: '31', group:'中国地方'      , text:'鳥取県'  , iconPath:'imgs/pref/31_tottori.png'  , defaultOn: 1, },
+      { origID: '32', group:'中国地方'      , text:'島根県'  , iconPath:'imgs/pref/32_shimane.png'  , defaultOn: 1, },
+      { origID: '33', group:'中国地方'      , text:'岡山県'  , iconPath:'imgs/pref/33_okayama.png'  , defaultOn: 1, },
+      { origID: '34', group:'中国地方'      , text:'広島県'  , iconPath:'imgs/pref/34_hiroshima.png', defaultOn: 1, },
+      { origID: '35', group:'中国地方'      , text:'山口県'  , iconPath:'imgs/pref/35_yamaguchi.png', defaultOn: 1, },
+      { origID: '36', group:'四国地方'      , text:'徳島県'  , iconPath:'imgs/pref/36_tokushima.png', defaultOn: 1, },
+      { origID: '37', group:'四国地方'      , text:'香川県'  , iconPath:'imgs/pref/37_kagawa.png'   , defaultOn: 1, },
+      { origID: '38', group:'四国地方'      , text:'愛媛県'  , iconPath:'imgs/pref/38_ehime.png'    , defaultOn: 1, },
+      { origID: '39', group:'四国地方'      , text:'高知県'  , iconPath:'imgs/pref/39_kochi.png'    , defaultOn: 1, },
+      { origID: '40', group:'九州・沖縄地方', text:'福岡県'  , iconPath:'imgs/pref/40_fukuoka.png'  , defaultOn: 1, },
+      { origID: '41', group:'九州・沖縄地方', text:'佐賀県'  , iconPath:'imgs/pref/41_saga.png'     , defaultOn: 1, },
+      { origID: '42', group:'九州・沖縄地方', text:'長崎県'  , iconPath:'imgs/pref/42_nagasaki.png' , defaultOn: 1, },
+      { origID: '43', group:'九州・沖縄地方', text:'熊本県'  , iconPath:'imgs/pref/43_kumamoto.png' , defaultOn: 1, },
+      { origID: '44', group:'九州・沖縄地方', text:'大分県'  , iconPath:'imgs/pref/44_oita.png'     , defaultOn: 1, },
+      { origID: '45', group:'九州・沖縄地方', text:'宮崎県'  , iconPath:'imgs/pref/45_miyazaki.png' , defaultOn: 1, },
+      { origID: '46', group:'九州・沖縄地方', text:'鹿児島県', iconPath:'imgs/pref/46_kagoshima.png', defaultOn: 1, },
+      { origID: '47', group:'九州・沖縄地方', text:'沖縄県'  , iconPath:'imgs/pref/47_okinawa.png'  , defaultOn: 1, },
+    ];}
+    
+    function getDefaultUserIconText() {
+      return [
+        '西園寺メアリ, https://pbs.twimg.com/profile_images/1245384865572253696/1tpZhaxB_400x400.jpg',
+        '白雪巴👠, https://pbs.twimg.com/profile_images/1245189634436587520/y8apwzdk_400x400.jpg',
+        'フミ, https://pbs.twimg.com/profile_images/1299864095294763008/dNBYlw2D_400x400.jpg',
+      ].join('\n').trim();
+    }
+    function getMembers774inc() { return [
+      { origID: '101', group:'あにまーれ', text:'因幡はねる'      , iconPath:'../imgs/icon/icon-a01.png', exists:1, defaultOn: 0, },
+      { origID: '102', group:'あにまーれ', text:'宗谷いちか'      , iconPath:'../imgs/icon/icon-a02.png', exists:1, defaultOn: 0, },
+      { origID: '103', group:'あにまーれ', text:'日ノ隈らん'      , iconPath:'../imgs/icon/icon-a03.png', exists:1, defaultOn: 0, },
+      { origID: '104', group:'あにまーれ', text:'宇森ひなこ'      , iconPath:'../imgs/icon/icon-a04.png', exists:0, defaultOn: 0, },
+      { origID: '105', group:'あにまーれ', text:'風見くく'        , iconPath:'../imgs/icon/icon-a05.png', exists:1, defaultOn: 0, },
+      { origID: '106', group:'あにまーれ', text:'柚原いづみ'      , iconPath:'../imgs/icon/icon-a06.png', exists:1, defaultOn: 0, },
+      { origID: '107', group:'あにまーれ', text:'白宮みみ'        , iconPath:'../imgs/icon/icon-a07.png', exists:1, defaultOn: 0, },
+      { origID: '108', group:'あにまーれ', text:'灰原あかね'      , iconPath:'../imgs/icon/icon-a08.png', exists:0, defaultOn: 0, },
+      { origID: '109', group:'あにまーれ', text:'羽柴なつみ'      , iconPath:'../imgs/icon/icon-a09.png', exists:1, defaultOn: 0, },
+      { origID: '110', group:'あにまーれ', text:'瀬島るい'        , iconPath:'../imgs/icon/icon-a10.png', exists:1, defaultOn: 0, },
+      { origID: '111', group:'あにまーれ', text:'飛良ひかり'      , iconPath:'../imgs/icon/icon-a11.png', exists:1, defaultOn: 0, },
+      { origID: '199', group:'あにまーれ', text:'黒猫ななし'      , iconPath:'../imgs/icon/icon-a00.png', exists:1, defaultOn: 0, },
+      { origID: '201', group:'ハニスト'  , text:'西園寺メアリ'    , iconPath:'../imgs/icon/icon-h01.png', exists:1, defaultOn: 1, },
+      { origID: '202', group:'ハニスト'  , text:'島村シャルロット', iconPath:'../imgs/icon/icon-h02.png', exists:1, defaultOn: 1, },
+      { origID: '203', group:'ハニスト'  , text:'周防パトラ'      , iconPath:'../imgs/icon/icon-h03.png', exists:1, defaultOn: 1, },
+      { origID: '204', group:'ハニスト'  , text:'堰代ミコ'        , iconPath:'../imgs/icon/icon-h04.png', exists:1, defaultOn: 1, },
+      { origID: '205', group:'ハニスト'  , text:'蒼月エリ'        , iconPath:'../imgs/icon/icon-h05.png', exists:0, defaultOn: 1, },
+      { origID: '299', group:'ハニスト'  , text:'灰猫ななし'      , iconPath:'../imgs/icon/icon-h00.png', exists:1, defaultOn: 0, },
+      { origID: '301', group:'シュガリリ', text:'龍ヶ崎リン'      , iconPath:'../imgs/icon/icon-s01.png', exists:1, defaultOn: 0, },
+      { origID: '302', group:'シュガリリ', text:'虎城アンナ'      , iconPath:'../imgs/icon/icon-s02.png', exists:1, defaultOn: 0, },
+      { origID: '303', group:'シュガリリ', text:'獅子王クリス'    , iconPath:'../imgs/icon/icon-s03.png', exists:1, defaultOn: 0, },
+      { origID: '399', group:'シュガリリ', text:'三毛猫ななし'    , iconPath:'../imgs/icon/icon-s00.png', exists:1, defaultOn: 0, },
+      { origID: '401', group:'ブイアパ'  , text:'杏戸ゆげ'        , iconPath:'../imgs/icon/icon-v01.png', exists:1, defaultOn: 0, },
+      { origID: '403', group:'ブイアパ'  , text:'花奏かのん'      , iconPath:'../imgs/icon/icon-v03.png', exists:1, defaultOn: 0, },
+      { origID: '404', group:'ブイアパ'  , text:'季咲あんこ'      , iconPath:'../imgs/icon/icon-v04.png', exists:1, defaultOn: 0, },
+      { origID: '405', group:'ブイアパ'  , text:'不磨わっと'      , iconPath:'../imgs/icon/icon-v05.png', exists:1, defaultOn: 0, },
+      { origID: '406', group:'ブイアパ'  , text:'小森めと'        , iconPath:'../imgs/icon/icon-v06.png', exists:1, defaultOn: 0, },
+      { origID: '499', group:'ブイアパ'  , text:'銀猫ななし'      , iconPath:'../imgs/icon/icon-v00.png', exists:1, defaultOn: 0, },
+    ];}
+  </script>
+</body>
+</html>
