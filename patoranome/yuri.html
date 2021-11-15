@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:title" content="ユリロノーム">
+  <meta property="og:url"   content="https://pecmm.github.io/patoranome/yuri.html" />
+  <meta property="og:image" content="https://pecmm.github.io/patoranome/thumb/yuri.png?f6fbc5b3">
+  <title>メトロノーム</title>
+  <link rel='stylesheet' href='../assets/tooltip.css' />
+  <style>
+    #control {
+      resize: none;
+      margin: 10px;
+    }
+    #control input {
+      vertical-align: middle;
+      padding-top:    3px;
+      padding-bottom: 3px;
+    }
+    #control input[type='number'] {
+      width: 3.5em;
+      text-align: right;
+      margin-right: 0.8em;
+    }
+    #control label {
+      font-size: 11pt;
+      vertical-align: middle;
+    }
+    #control .labelheader {
+      display: inline-block;
+      width: 5em;
+      text-align: right;
+      padding-right: 5px;
+    }
+    
+    #versionBox {
+      display: inline-block;
+      margin-left: 2em;
+      vertical-align: bottom;
+    }
+    
+    footer {
+      font-size: 9pt;
+      position: fixed;
+      width: 100%;
+      bottom: 0px;
+      margin: 0px;
+      padding: 10px;
+      border: 0px;
+      box-sizing: border-box;
+      background-color: #DDDDDD;
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+    }
+    .footerItem:not(:last-of-type) {
+      margin-right: 1.3em;
+    }
+    
+    .loading-text, .loading {
+      font-size: 4em;
+    }
+    
+    /**
+     * loading 参考 https://qiita.com/soarflat/items/4a302e0cafa21477707f
+     */
+    .loading {
+      vertical-align: middle;
+      display: inline-block;
+      margin: 0 0.3em;
+      text-indent: -9999em;
+      width : 1em;
+      height: 1em;
+      border-radius: 50%;
+      background: #792a2a;
+      background: -moz-linear-gradient(left, #792a2a 10%, rgba(121,42,42, 0) 42%);
+      background: -webkit-linear-gradient(left, #792a2a 10%, rgba(121,42,42, 0) 42%);
+      background: -o-linear-gradient(left, #792a2a 10%, rgba(121,42,42, 0) 42%);
+      background: -ms-linear-gradient(left, #792a2a 10%, rgba(121,42,42, 0) 42%);
+      background: linear-gradient(to right, #792a2a 10%, rgba(121,42,42, 0) 42%);
+      position: relative;
+      -webkit-animation: load3 1.4s infinite linear;
+      animation: load3 1.4s infinite linear;
+      -webkit-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+    .loading:before {
+      width: 50%;
+      height: 50%;
+      background: #792a2a;
+      border-radius: 100% 0 0 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: '';
+    }
+    .loading:after {
+      background: #ffffff;
+      width: 75%;
+      height: 75%;
+      border-radius: 50%;
+      content: '';
+      margin: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+    @-webkit-keyframes load3 {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes load3 {
+      0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id='contentbody'>
+    <div id='control'>
+      <label class='tltp-always tltp-right' data-tltp-text='動作中は変更できません'><span class='labelheader' >Tempo：</span><input id='tempoBox'  type='number' /><input id='tempoBar'  type='range' /></label><br />
+      <label                                                                       ><span class='labelheader'>Volume：</span><input id='volumeBox' type='number' /><input id='volumeBar' type='range' /></label><br />
+      <label class='tltp-always tltp-right' data-tltp-text='動作中は変更できません'><span class='labelheader' >Voice：</span><select id='voiceSelect'></select></label><br />
+      <button id='playButton'>開始/停止</button> <div id='versionBox'>ver: <span id='version'></span></div>
+    </div>
+    <hr />
+    <div id='main'>
+      <div id='loading-area'><span class='loading-text'>Loading...</span><span class='loading'></span></div>
+      <canvas id='mainCanvas' /></canvas>
+    </div>
+  </div>
+  <footer></footer>
+
+  <script src="../assets/pixi-legacy.min-v5.0.4.js"></script>
+  <script src="../assets/pixi-sound-v3.0.3.js"></script>
+  <script>
+    const AppVersion = "1.0.0";
+    
+    // ここから
+const _0x262a7c=_0x3e8f;function _0x3e8f(_0x2e6646,_0x263994){const _0x55c3d9=_0x55c3();return _0x3e8f=function(_0x3e8fb8,_0x4a468a){_0x3e8fb8=_0x3e8fb8-0x11c;let _0x3da61a=_0x55c3d9[_0x3e8fb8];return _0x3da61a;},_0x3e8f(_0x2e6646,_0x263994);}(function(_0x3e8a9c,_0x2ec2f2){const _0x45e19b=_0x3e8f,_0x3c829a=_0x3e8a9c();while(!![]){try{const _0x402d76=parseInt(_0x45e19b(0x13e))/0x1+parseInt(_0x45e19b(0x161))/0x2+-parseInt(_0x45e19b(0x12b))/0x3+parseInt(_0x45e19b(0x151))/0x4*(parseInt(_0x45e19b(0x124))/0x5)+-parseInt(_0x45e19b(0x129))/0x6*(parseInt(_0x45e19b(0x130))/0x7)+-parseInt(_0x45e19b(0x123))/0x8*(-parseInt(_0x45e19b(0x16c))/0x9)+parseInt(_0x45e19b(0x172))/0xa*(-parseInt(_0x45e19b(0x12a))/0xb);if(_0x402d76===_0x2ec2f2)break;else _0x3c829a['push'](_0x3c829a['shift']());}catch(_0xf9b620){_0x3c829a['push'](_0x3c829a['shift']());}}}(_0x55c3,0x650ec),document[_0x262a7c(0x140)](_0x262a7c(0x142))[_0x262a7c(0x16b)]=AppVersion);function loadSyncImage(_0x402b74){return new Promise((_0x2f4249,_0x4e4dca)=>{const _0x3f723b=_0x3e8f;let _0x192816=new Image();_0x192816['onload']=()=>_0x2f4249(_0x192816),_0x192816['eonerror']=_0x3bd76c=>_0x4e4dca(_0x3bd76c),_0x192816[_0x3f723b(0x155)]=_0x402b74;});}function loadSyncSound(_0xb40bd9){return new Promise((_0x1b056a,_0x1e7005)=>{const _0x22c2c9=_0x3e8f;let _0x2525ab=PIXI[_0x22c2c9(0x12f)]['Sound'][_0x22c2c9(0x127)]({'url':_0xb40bd9,'autoPlay':![],'preload':!![],'loaded':function(){_0x1b056a(_0x2525ab);}});});}function _0x55c3(){const _0x47d2fe=['addEventListener','#mainCanvas','volume','referenceHTML','halfStepCount','656lFXLyF','1138705NpHzyn','#loading-area','drawImage','from','string','534RtooYV','55bQqjde','67092ifwjwu','soundPaths','floor','reverse','sound','51751YXIvnL','classList','removeAttribute','images','location','volumeMinValue','insertAdjacentHTML','slice','sounds','#volumeBar','startTimestamp','setAttribute','min','change','75623NiCRkM','find','querySelector','play','#version','selected','title','tempoValue','requestAnimationFrame','parentElement','soundIndex','removeChild','prevValue','max','appendChild','pitch','searchParams','forEach','focus','4YlnwdD','changePendulum','imagesLength','value','src','spped','rodPaths','fullStepCount','dataset','option','toggle','pageOptions','#tempoBar','input','length','initValues','1242296wGuueH','#volumeBox','playing','click','volumeMaxValue','name','#playButton','prevIndex','createElement','all','textContent','70677baOvcO','soundsCount','map','height','getOwnPropertyNames','tempoMinValue','948370knJPUZ','tltp-on-hover','pendulumConfigs','get','disabled','volumeAll','rodImage'];_0x55c3=function(){return _0x47d2fe;};return _0x55c3();}function newElem(_0x24a256,_0x472f38=[],_0x393d45=[],_0x5c56b4={}){const _0x46ec8e=_0x262a7c,_0x595b25=document[_0x46ec8e(0x169)](_0x24a256);return _0x393d45[_0x46ec8e(0x15f)]>0x0&&_0x595b25[_0x46ec8e(0x131)]['add'](..._0x393d45),Object[_0x46ec8e(0x170)](_0x5c56b4)[_0x46ec8e(0x14f)](_0x49837c=>{const _0x49c81b=_0x46ec8e;_0x595b25[_0x49c81b(0x13b)](_0x49837c,_0x5c56b4[_0x49837c]);}),_0x472f38['forEach'](_0x32d27b=>{const _0x316a3e=_0x46ec8e;typeof _0x32d27b===_0x316a3e(0x128)?_0x595b25[_0x316a3e(0x14c)](document['createTextNode'](_0x32d27b)):_0x595b25['appendChild'](_0x32d27b);}),_0x595b25;}PIXI['utils']['skipHello'](),async function(_0x5dd1b6){const _0x379f9f=_0x262a7c,_0x40048a=document[_0x379f9f(0x140)](_0x379f9f(0x125)),_0x23f191=document[_0x379f9f(0x140)](_0x379f9f(0x11f)),_0x2d17d9=_0x23f191['getContext']('2d');{_0x5dd1b6[_0x379f9f(0x15c)][_0x379f9f(0x144)]&&(document[_0x379f9f(0x144)]=_0x5dd1b6[_0x379f9f(0x15c)][_0x379f9f(0x144)]),_0x5dd1b6[_0x379f9f(0x15c)][_0x379f9f(0x121)]&&document['querySelector']('footer')[_0x379f9f(0x136)]('afterbegin',_0x5dd1b6[_0x379f9f(0x15c)]['referenceHTML']);}const _0x21719c={};_0x21719c['changePendulum']=async _0x154cac=>{const _0x216c52=_0x379f9f,_0x2f9898=await Promise[_0x216c52(0x16a)](_0x154cac[_0x216c52(0x11d)][_0x216c52(0x157)]['map'](_0x3b52ba=>loadSyncImage(_0x3b52ba)));_0x21719c[_0x216c52(0x153)]=_0x2f9898['length'],_0x21719c['halfStepCount']=_0x21719c[_0x216c52(0x153)]-0x1,_0x21719c[_0x216c52(0x158)]=_0x21719c[_0x216c52(0x122)]*0x2,_0x21719c[_0x216c52(0x133)]=_0x2f9898['concat'](_0x2f9898[_0x216c52(0x137)](0x1)[_0x216c52(0x12e)]()[_0x216c52(0x137)](0x1));const _0x5a35f5=await Promise[_0x216c52(0x16a)](_0x154cac[_0x216c52(0x12c)][_0x216c52(0x16e)](_0x1fb3a6=>loadSyncSound(_0x1fb3a6)));_0x21719c['soundsCount']=_0x5a35f5['length'],_0x21719c['sounds']=_0x5a35f5,_0x23f191['width']=_0x2f9898[0x0]['width'],_0x23f191[_0x216c52(0x16f)]=_0x2f9898[0x0][_0x216c52(0x16f)],_0x2d17d9[_0x216c52(0x126)](_0x2f9898[Math[_0x216c52(0x12d)](_0x2f9898[_0x216c52(0x15f)]/0x2)],0x0,0x0);};const _0x1101e4={},_0x1eef25=_0x580f3a=>{const _0x91bec1=_0x379f9f;_0x1101e4['playing']=_0x580f3a,_0x1101e4[_0x91bec1(0x13a)]=null,_0x1101e4[_0x91bec1(0x168)]=null,_0x1101e4[_0x91bec1(0x148)]=0x0;},_0x530218=_0x56c91a=>{const _0x284a5f=_0x379f9f;if(!_0x1101e4['playing'])return;!_0x1101e4[_0x284a5f(0x13a)]&&(_0x1101e4[_0x284a5f(0x13a)]=_0x56c91a);const _0x566693=Math['floor']((_0x56c91a-_0x1101e4[_0x284a5f(0x13a)])/_0x1101e4[_0x284a5f(0x14d)]);if(_0x566693!==_0x1101e4[_0x284a5f(0x168)]){const _0x1d244f=_0x566693%_0x21719c[_0x284a5f(0x158)];_0x2d17d9[_0x284a5f(0x126)](_0x21719c['images'][_0x1d244f],0x0,0x0),_0x566693%_0x21719c[_0x284a5f(0x122)]===0x0&&(_0x21719c['sounds'][_0x1101e4[_0x284a5f(0x148)]][_0x284a5f(0x141)](),_0x1101e4['soundIndex']=(_0x1101e4[_0x284a5f(0x148)]+0x1)%_0x21719c[_0x284a5f(0x16d)]);}_0x1101e4[_0x284a5f(0x168)]=_0x566693,window[_0x284a5f(0x146)](_0x530218);},_0x3b12a1=_0x5a69c2=>{const _0x533aa7=_0x379f9f;_0x1eef25(!![]);const _0x119fee=_0x5a69c2/0x3c;_0x1101e4[_0x533aa7(0x14d)]=0x3e8/_0x119fee/_0x21719c[_0x533aa7(0x122)];const _0x3a7eb2=0x1+Math[_0x533aa7(0x12d)]((_0x5a69c2-0x78)/0x1e,0x1)*0.01;_0x21719c[_0x533aa7(0x138)][_0x533aa7(0x14f)](_0x29ad0a=>_0x29ad0a[_0x533aa7(0x156)]=_0x3a7eb2),window['requestAnimationFrame'](_0x530218);};_0x40048a[_0x379f9f(0x147)][_0x379f9f(0x149)](_0x40048a),_0x1eef25(![]),await _0x21719c[_0x379f9f(0x152)](_0x5dd1b6[_0x379f9f(0x174)][0x0]);{const [_0x5b1e97,_0x5654e8,_0xbf61f6]=(_0x3b61fa=>['id','tempo',_0x379f9f(0x120)]['map'](_0x23801f=>_0x3b61fa[_0x379f9f(0x175)](_0x23801f)))(new URL(window[_0x379f9f(0x134)])[_0x379f9f(0x14e)]);function _0x630583(_0x1e1590,_0x4db55d,_0x58840e,_0x3b8a87,_0x583a31,_0x158366,_0x5c60bd){const _0x445458=_0x379f9f;!_0x158366&&(_0x158366=()=>{});_0x1e1590[_0x445458(0x13c)]=_0x3b8a87,_0x1e1590[_0x445458(0x14b)]=_0x583a31,_0x1e1590[_0x445458(0x154)]=_0x58840e,_0x4db55d[_0x445458(0x13c)]=_0x3b8a87,_0x4db55d['max']=_0x583a31,_0x4db55d[_0x445458(0x154)]=_0x58840e;const _0x1ee934=()=>{const _0x3c3a7e=_0x445458,_0x5866d8=parseInt(_0x1e1590[_0x3c3a7e(0x154)],0xa);!Number['isFinite'](_0x5866d8)||_0x5866d8<_0x3b8a87||_0x5866d8>_0x583a31?_0x1e1590[_0x3c3a7e(0x154)]=_0x1e1590[_0x3c3a7e(0x159)]['prevValue']:(_0x1e1590[_0x3c3a7e(0x159)][_0x3c3a7e(0x14a)]=_0x5866d8,_0x4db55d[_0x3c3a7e(0x154)]=_0x5866d8),_0x158366();};_0x1e1590[_0x445458(0x159)][_0x445458(0x14a)]=_0x58840e,_0x1e1590[_0x445458(0x11e)](_0x445458(0x13d),_0x10a17d=>{_0x1ee934();}),_0x4db55d[_0x445458(0x11e)](_0x445458(0x15e),_0x1d18e3=>{const _0x2768f5=_0x445458;_0x1e1590[_0x2768f5(0x154)]=_0x4db55d[_0x2768f5(0x154)],_0x1e1590[_0x2768f5(0x159)][_0x2768f5(0x14a)]=_0x4db55d[_0x2768f5(0x154)],_0x158366();}),_0x5c60bd&&(_0x1e1590[_0x445458(0x154)]=_0x5c60bd,_0x1ee934());}const _0x3d7f7e=document[_0x379f9f(0x140)]('#tempoBox'),_0x21bb32=document[_0x379f9f(0x140)](_0x379f9f(0x15d)),_0x3d2750=document[_0x379f9f(0x140)](_0x379f9f(0x162)),_0x51db2a=document[_0x379f9f(0x140)](_0x379f9f(0x139)),_0xe18b93=_0x43a465=>{const _0x783d83=_0x379f9f;PIXI[_0x783d83(0x12f)][_0x783d83(0x11c)]=_0x51db2a[_0x783d83(0x154)]/0x64;};_0x630583(_0x3d7f7e,_0x21bb32,_0x5dd1b6[_0x379f9f(0x160)][_0x379f9f(0x145)],_0x5dd1b6['initValues'][_0x379f9f(0x171)],_0x5dd1b6[_0x379f9f(0x160)]['tempoMaxValue'],undefined,_0x5654e8),_0x630583(_0x3d2750,_0x51db2a,_0x5dd1b6['initValues']['volumeValue'],_0x5dd1b6[_0x379f9f(0x160)][_0x379f9f(0x135)],_0x5dd1b6[_0x379f9f(0x160)][_0x379f9f(0x165)],_0xe18b93,_0xbf61f6),_0xe18b93();const _0x17e0ab=document[_0x379f9f(0x140)]('#voiceSelect');_0x5dd1b6['pendulumConfigs'][_0x379f9f(0x14f)](_0x1429a5=>{const _0x50f09f=_0x379f9f;_0x17e0ab[_0x50f09f(0x14c)](newElem(_0x50f09f(0x15a),[_0x1429a5[_0x50f09f(0x166)]],[],{'value':_0x1429a5['id']}));});const _0x565534=_0x5dd1b6[_0x379f9f(0x174)][_0x379f9f(0x13f)](_0x5edf08=>_0x5edf08['id']===_0x5b1e97)??_0x5dd1b6['pendulumConfigs'][_0x379f9f(0x13f)](_0x41a2a5=>_0x41a2a5[_0x379f9f(0x143)]);_0x565534&&(_0x17e0ab[_0x379f9f(0x154)]=_0x565534['id']);const _0x420d61=async function(){const _0x52609a=_0x379f9f,_0x475dfa=_0x5dd1b6[_0x52609a(0x174)]['find'](_0xf4c900=>_0xf4c900['id']===_0x17e0ab['value']);await _0x21719c[_0x52609a(0x152)](_0x475dfa);};_0x17e0ab[_0x379f9f(0x11e)](_0x379f9f(0x13d),_0x420d61),_0x420d61();const _0x18c8e4=document[_0x379f9f(0x140)](_0x379f9f(0x167));_0x18c8e4[_0x379f9f(0x150)](),_0x18c8e4[_0x379f9f(0x11e)](_0x379f9f(0x164),_0x10501a=>{const _0x3951b3=_0x379f9f;_0x1101e4[_0x3951b3(0x163)]?(_0x1eef25(![]),_0x3d7f7e[_0x3951b3(0x132)](_0x3951b3(0x176)),_0x21bb32[_0x3951b3(0x132)](_0x3951b3(0x176)),_0x17e0ab['removeAttribute'](_0x3951b3(0x176)),_0x3d7f7e[_0x3951b3(0x147)][_0x3951b3(0x131)][_0x3951b3(0x15b)](_0x3951b3(0x173)),_0x17e0ab[_0x3951b3(0x147)]['classList']['toggle']('tltp-on-hover')):(_0x3d7f7e['setAttribute'](_0x3951b3(0x176),!![]),_0x21bb32['setAttribute']('disabled',!![]),_0x17e0ab[_0x3951b3(0x13b)](_0x3951b3(0x176),!![]),_0x3d7f7e[_0x3951b3(0x147)][_0x3951b3(0x131)][_0x3951b3(0x15b)](_0x3951b3(0x173)),_0x17e0ab[_0x3951b3(0x147)][_0x3951b3(0x131)]['toggle'](_0x3951b3(0x173)),_0x3b12a1(parseInt(_0x21bb32[_0x3951b3(0x154)],0xa),0x64));});}}(getInitValues());    
+    
+    
+    function getInitValues() {
+      return {
+        // ページの構成
+        pageOptions: {
+          title: 'ユリロノーム',
+          referenceHTML: '元ネタ：' + [
+            '<a href="https://twitter.com/Yuri_Kohakuu">瑚白ユリ🦙ひよクロ 様</a> (<a href="https://twitter.com/Yuri_Kohakuu/status/1459708391752798210">動画の元ネタ</a>, <a href="https://www.youtube.com/watch?v=GJ00bIjT-zA">音声の元ネタ</a>)'
+          ].map(x => `<span class='footerItem'>${x}</span>`).join(''),
+        },
+        // 共通の初期設定
+        initValues: {
+          tempoValue      : 120,
+          tempoMinValue   :  30,
+          tempoMaxValue   : 360,
+          volumeValue     :  35,
+          volumeMinValue  :   0,
+          volumeMaxValue  : 100,
+        },
+        // 個別の設定
+        pendulumConfigs: [
+          // 重複する name は認めない。 fixme Map を検討する。今の所arrayの方が扱いやすいのでこのままとする
+          { id:'yuri1', name:'ユリ-はー'  , selected:true, soundPaths:['yuri/ha-.mp3',], rodImage:{rodPaths:['yuri/01.jpg', 'yuri/02.jpg', 'yuri/03.jpg', 'yuri/04.jpg', 'yuri/05.jpg', 'yuri/06.jpg', 'yuri/07.jpg',],}, },
+          { id:'yuri2', name:'ユリ-ハイ'  , selected:true, soundPaths:['yuri/hai.mp3',], rodImage:{rodPaths:['yuri/01.jpg', 'yuri/02.jpg', 'yuri/03.jpg', 'yuri/04.jpg', 'yuri/05.jpg', 'yuri/06.jpg', 'yuri/07.jpg',],}, },
+        ],
+      };
+    }
+  </script>
+</body>
+</html>
