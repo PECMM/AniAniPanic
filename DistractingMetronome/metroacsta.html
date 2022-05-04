@@ -42,6 +42,10 @@
       max-width: 100%;
       display: none;
     }
+    
+    .footerItem {
+      white-space: pre;
+    }
   </style>
 </head>
 <body>
@@ -83,8 +87,10 @@ const _0x5e6f75=_0x54b8;(function(_0x46ef19,_0x1a4866){const _0x4a3a0c=_0x54b8,_
         // ページの構成
         pageOptions: {
           title: '',
-          referenceHTML: '元ネタ：' + [
-            '<a href="https://twitter.com/Nemo_Suzumi/">涼海ネモ</a>た (<a href="https://twitter.com/Nemo_Suzumi/status/1451656103582789633">立ち絵</a>, <a href="https://www.youtube.com/watch?v=uuZBpCtXH_A&t=1219s">音声</a>←配信内20分19秒)',
+          referenceHTML: [
+            '元ネタ：',
+            '  <a href="https://twitter.com/Nemo_Suzumi/">涼海ネモ</a>た (<a href="https://twitter.com/Nemo_Suzumi/status/1451656103582789633">立ち絵</a>, <a href="https://www.youtube.com/watch?v=uuZBpCtXH_A&t=1219s">音声</a>←配信内20分19秒)',
+            '  <a href="https://twitter.com/Charlotte_HNST">島村シャルロット</a>様 (<a href="https://twitter.com/HNST_official/status/1518941008264048644">立ち絵</a>, <a href="https://twitter.com/Charlotte_HNST/status/1067080849693134848">音声</a>)',
           ].map(x => `<span class='footerItem'>${x}</span>`).join('<br />'),
         },
         helpTexts: {
@@ -134,6 +140,19 @@ const _0x5e6f75=_0x54b8;(function(_0x46ef19,_0x1a4866){const _0x4a3a0c=_0x54b8,_
             imagePath: '../imgs/standing/c02-01.png',
             startVoice: './res/nemo1-ikuyo.mp3',
             voicePaths: [ './res/nemo1-baka.mp3' ],
+          },
+          { type: 'preset',
+            id: 'charl1',
+            name: '島村シャルロット「１・２・３・ＰＯＮ」',
+            circleBackColor: '#2222EE',
+            imagePath: '../imgs/standing/h02-07.png',
+            startVoice: null,
+            voicePaths: [
+              'res/charlotte-pon1.mp3',
+              'res/charlotte-pon2.mp3',
+              'res/charlotte-pon3.mp3',
+              'res/charlotte-pon4.mp3'
+            ],
           },
         ],
         
